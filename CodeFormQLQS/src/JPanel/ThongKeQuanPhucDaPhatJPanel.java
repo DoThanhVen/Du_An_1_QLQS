@@ -15,14 +15,14 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author Admin
  */
-public class ThongKeQuanPhucDaPhat extends javax.swing.JPanel {
+public class ThongKeQuanPhucDaPhatJPanel extends javax.swing.JPanel {
 
     List<QuanPhuc> ListQP = new ArrayList<>();
 
     /**
      * Creates new form FormQuanPhucDaPat
      */
-    public ThongKeQuanPhucDaPhat() {
+    public ThongKeQuanPhucDaPhatJPanel() {
         initComponents();
         init();
         fillTableQuanPhucDaPhat();

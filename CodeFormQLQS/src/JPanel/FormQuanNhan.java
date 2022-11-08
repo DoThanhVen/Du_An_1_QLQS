@@ -32,10 +32,10 @@ import javax.swing.BorderFactory;
  * @author Admin
  */
 public class FormQuanNhan extends javax.swing.JPanel {
-    
+
     QuanNhanDAO qnDAO = new QuanNhanDAO();
     int indexTable = -1;
-    
+
     public static String maQuanNhan = "";
 
     /**
@@ -53,7 +53,7 @@ public class FormQuanNhan extends javax.swing.JPanel {
         txtDonVi.setHint("Địa Chỉ");
         txtMaQN.setHint("Mã QN");
     }
-    
+
     void addSearchItem() {
         txtSearch.addOption(new SearchOption("mã quân nhân...", new ImageIcon(getClass().getResource("/Image/Icon/shield-plus-solid-24.png"))));
         txtSearch.addOption(new SearchOption("tên quân nhân...", new ImageIcon(getClass().getResource("/Image/Icon/user-detail-solid-24.png"))));
@@ -81,7 +81,7 @@ public class FormQuanNhan extends javax.swing.JPanel {
         button5.setFont(new Font("sansserif", 1, 12));
         button5.setText("Size Equip");
     }
-    
+
     void setSizeTable() {
         lblImage.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.BLACK));
         scrollTable.setVerticalScrollBar(new JavaClass.ScrollBar());
@@ -91,7 +91,7 @@ public class FormQuanNhan extends javax.swing.JPanel {
         tblQuanNhan.getColumnModel().getColumn(1).setPreferredWidth(130);
         tblQuanNhan.getColumnModel().getColumn(2).setPreferredWidth(80);
     }
-    
+
     void loadData(String where) {
         DefaultTableModel model = (DefaultTableModel) tblQuanNhan.getModel();
         model.setRowCount(0);
@@ -133,10 +133,10 @@ public class FormQuanNhan extends javax.swing.JPanel {
             }
         } catch (SQLException e) {
             DialogHelper.alert(this, "Lỗi truy vấn quân nhân! " + e);
-            
+
         }
     }
-    
+
     void fillTableQuanNhan() {
         DefaultTableModel model = (DefaultTableModel) tblQuanNhan.getModel();
         model.setRowCount(0);
@@ -178,7 +178,7 @@ public class FormQuanNhan extends javax.swing.JPanel {
             }
         } catch (SQLException e) {
             DialogHelper.alert(this, "Lỗi truy vấn quân nhân! " + e);
-            
+
         }
     }
 
@@ -384,7 +384,31 @@ public class FormQuanNhan extends javax.swing.JPanel {
 
     private void button5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_button5ActionPerformed
         // TODO add your handling code here:
-            showForm(new SizeQuanPhuc());
+        indexTable = tblQuanNhan.getSelectedRow();
+        if (indexTable == -1) {
+            DialogHelper.alert(panelBorder2, "Vui lòng chọn quân nhân cần xác thực size quân phục!");
+        } else {
+            try {
+                int check = 0;
+                String sql = "Select * FROM SizeQuanPhuc";
+                ResultSet rs = JDBCHelper.executeQuery(sql);
+                while (rs.next()) {
+                    if (tblQuanNhan.getValueAt(indexTable, 0).toString().equalsIgnoreCase(rs.getString("MaDinhDanh"))) {
+                        check++;
+                        break;
+                    }
+                }
+                if (check == 0) {
+                    maQuanNhan = tblQuanNhan.getValueAt(indexTable, 0).toString();
+                    showForm(new SizeQuanPhucJPanel());
+                } else {
+                    maQuanNhan = tblQuanNhan.getValueAt(indexTable, 0).toString();
+                    DialogHelper.alert(panelBorder2, "Quân nhân đã xác thực size quân phục!");
+                    showForm(new SizeQuanPhucJPanel());
+                }
+            } catch (Exception e) {
+            }
+        }
     }//GEN-LAST:event_button5ActionPerformed
     void showForm(Component com) {
         panelBorder2.removeAll();

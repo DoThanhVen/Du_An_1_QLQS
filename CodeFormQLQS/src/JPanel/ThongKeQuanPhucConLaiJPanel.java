@@ -13,14 +13,14 @@ import java.util.List;
  *
  * @author Admin
  */
-public class ThongKeQuanPhucConLai extends javax.swing.JPanel {
+public class ThongKeQuanPhucConLaiJPanel extends javax.swing.JPanel {
 
     List<QuanPhuc> ListQP = new ArrayList<>();
 
     /**
      * Creates new form QuanPhucConLai
      */
-    public ThongKeQuanPhucConLai() {
+    public ThongKeQuanPhucConLaiJPanel() {
         initComponents();
         init();
     }

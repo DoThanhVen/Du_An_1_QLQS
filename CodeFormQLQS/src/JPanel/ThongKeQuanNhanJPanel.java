@@ -13,12 +13,12 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author Admin
  */
-public class ThongKeQuanNhan extends javax.swing.JPanel {
+public class ThongKeQuanNhanJPanel extends javax.swing.JPanel {
 
     /**
      * Creates new form ThongKeQuanNhan
      */
-    public ThongKeQuanNhan() {
+    public ThongKeQuanNhanJPanel() {
         initComponents();
         try {
             fillTable();

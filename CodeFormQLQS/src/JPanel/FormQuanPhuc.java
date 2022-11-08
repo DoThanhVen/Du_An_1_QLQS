@@ -115,6 +115,7 @@ public class FormQuanPhuc extends javax.swing.JPanel {
         button3 = new JavaClass.Button();
         button4 = new JavaClass.Button();
         cboNam = new JavaClass.Combobox();
+        jLabel3 = new javax.swing.JLabel();
 
         jLabel1.setText("jLabel1");
 
@@ -159,9 +160,12 @@ public class FormQuanPhuc extends javax.swing.JPanel {
         button4.setText("button4");
         add(button4, new org.netbeans.lib.awtextra.AbsoluteConstraints(730, 430, 85, -1));
 
-        cboNam.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", " " }));
+        cboNam.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" }));
         cboNam.setLabeText("");
-        add(cboNam, new org.netbeans.lib.awtextra.AbsoluteConstraints(620, 270, 190, 30));
+        add(cboNam, new org.netbeans.lib.awtextra.AbsoluteConstraints(730, 270, 80, 40));
+
+        jLabel3.setText("Thời gian cấp (Năm):");
+        add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(620, 290, -1, -1));
     }// </editor-fold>//GEN-END:initComponents
 
 
@@ -173,6 +177,7 @@ public class FormQuanPhuc extends javax.swing.JPanel {
     private JavaClass.Combobox cboNam;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel lblImage;
     private javax.swing.JScrollPane scrollTable;
     private JavaClass.TableQuanPhuc tblQuanPhuc;

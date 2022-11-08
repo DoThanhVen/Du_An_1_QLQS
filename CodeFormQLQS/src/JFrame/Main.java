@@ -58,15 +58,15 @@ public class Main extends javax.swing.JFrame {
                     } else if (index == 1 && subIndex == 2) {
                         showForm(new FormQuanPhuc());
                     } else if (index == 2 && subIndex == 1) {
-                        showForm(new ThongKeQuanNhan());
+                        showForm(new ThongKeQuanNhanJPanel());
                     } else if (index == 2 && subIndex == 2) {
                         System.out.println("Quân Phục Nhập Vào");
                     } else if (index == 2 && subIndex == 3) {
-                        showForm(new ThongKeQuanPhucDaPhat());
+                        showForm(new ThongKeQuanPhucDaPhatJPanel());
                     } else if (index == 2 && subIndex == 4) {
-                        showForm(new ThongKeQuanPhucConLai());
+                        showForm(new ThongKeQuanPhucConLaiJPanel());
                     } else if (index == 2 && subIndex == 5) {
-                        showForm(new SizeQuanPhuc());
+                        showForm(new SizeQuanPhucJPanel());
                     } else if (index == 3 && subIndex == 0) {
                         if (DialogHelper.confirm(pnlMain, "Bạn có muốn thoát không?")) {
                             System.exit(0);

@@ -3,12 +3,10 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/CodeFormQLQS/src/JFrame/Main.java</file>
-            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/CodeFormQLQS/src/Class/QuanNhan.java</file>
-            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/CodeFormQLQS/src/Helper/DialogHelper.java</file>
-            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/CodeFormQLQS/src/DAO/QuanNhanDAO.java</file>
-            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/CodeFormQLQS/src/JPanel/FormQuanNhan.java</file>
-            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/CodeFormQLQS/src/JPanel/SizeQuanPhuc.java</file>
+            <file>file:/C:/Users/Admin/Documents/GitHub/Du_An_1_QLQS/CodeFormQLQS/src/Class/PhatQuanPhuc.java</file>
+            <file>file:/C:/Users/Admin/Documents/GitHub/Du_An_1_QLQS/CodeFormQLQS/src/Helper/DateHelper.java</file>
+            <file>file:/C:/Users/Admin/Documents/GitHub/Du_An_1_QLQS/CodeFormQLQS/src/JPanel/PhatQuanPhucJPanel.java</file>
+            <file>file:/C:/Users/Admin/Documents/GitHub/Du_An_1_QLQS/CodeFormQLQS/src/JPanel/FormQuanNhan.java</file>
         </group>
     </open-files>
 </project-private>

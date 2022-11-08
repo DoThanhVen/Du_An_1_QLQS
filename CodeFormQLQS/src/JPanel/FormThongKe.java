@@ -40,9 +40,9 @@ public class FormThongKe extends javax.swing.JPanel {
 
     public void setSelectedIndex(int index) {
         if (index == 0) {
-            setForm(new ThongKeQuanPhucDaPhat());
+            setForm(new ThongKeQuanPhucDaPhatJPanel());
         } else if (index == 1) {
-            setForm(new ThongKeQuanPhucConLai());
+            setForm(new ThongKeQuanPhucConLaiJPanel());
         } else {
 
         }
@@ -251,7 +251,7 @@ public class FormThongKe extends javax.swing.JPanel {
         // TODO add your handling code here:
         panelBorder2.removeAll();
         panelBorder2.setLayout(new BorderLayout());
-        panelBorder2.add(new ThongKeQuanPhucDaPhat());
+        panelBorder2.add(new ThongKeQuanPhucDaPhatJPanel());
         panelBorder2.repaint();
         panelBorder2.revalidate();
     }//GEN-LAST:event_card4MouseClicked
@@ -269,7 +269,7 @@ public class FormThongKe extends javax.swing.JPanel {
         // TODO add your handling code here:
         panelBorder2.removeAll();
         panelBorder2.setLayout(new BorderLayout());
-        panelBorder2.add(new ThongKeQuanPhucConLai());
+        panelBorder2.add(new ThongKeQuanPhucConLaiJPanel());
         panelBorder2.repaint();
         panelBorder2.revalidate();
     }//GEN-LAST:event_card5MouseClicked
