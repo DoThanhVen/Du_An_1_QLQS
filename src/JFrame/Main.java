@@ -42,7 +42,7 @@ public class Main extends javax.swing.JFrame {
         menu.setGradientColor(new Color(130, 148, 96), new Color(130, 148, 96));
         menu.setBackground(new Color(130, 148, 96));
         menu.addItem("Trang Chủ");
-        menu.addItem("Quản Lý", "Quân Nhân", "Quân Phục");
+        menu.addItem("Quản Lý", "Đại Đội", "Vũ Trang", "Quân Nhân", "Quân Phục");
         menu.addItem("Thống Kê", "Số Lượng Quân Nhân", "Quân Phục Nhập Vào", "Quân Phục Đã Phát", "Quân Phục Còn Lại", "Nhận Quân Phục");
         menu.addItem("Kết Thúc");
         menu.addItem("Trợ Giúp", "Đổi Mật Khẩu", "Hướng Dẫn");
@@ -54,8 +54,12 @@ public class Main extends javax.swing.JFrame {
                     if (index == 0 && subIndex == 0) {
                         showForm(new FormHome());
                     } else if (index == 1 && subIndex == 1) {
-                        showForm(new FormQuanNhan());
+                        showForm(new DaiDoiJPanel());
                     } else if (index == 1 && subIndex == 2) {
+                        System.out.println("Vũ Trang");
+                    } else if (index == 1 && subIndex == 3) {
+                        showForm(new FormQuanNhan());
+                    } else if (index == 1 && subIndex == 4) {
                         showForm(new FormQuanPhuc());
                     } else if (index == 2 && subIndex == 1) {
                         showForm(new ThongKeQuanNhanJPanel());
@@ -73,9 +77,9 @@ public class Main extends javax.swing.JFrame {
                         }
                     } else if (index == 4 && subIndex == 1) {
                         System.out.println("Đổi mật khẩu");
-                    }else{
+                    } else {
                         System.out.println("Hướng dẫn");
-}
+                    }
                 }
             }
         });

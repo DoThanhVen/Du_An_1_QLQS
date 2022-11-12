@@ -25,7 +25,7 @@ GioiTinh bit NOT NULL,
 NgaySinh date NOT NULL,
 HinhAnh nvarchar(500) NULL,
 PRIMARY KEY(MaDinhDanh),
-FOREIGN KEY (DonVi) REFERENCES DaiDoi(MaDaiDoi) 
+FOREIGN KEY (DonVi) REFERENCES DaiDoi(MaDaiDoi) ON DELETE CASCADE
 )
 GO
 --Thêm dữ liệu vào bảng Quân Nhân
@@ -113,7 +113,7 @@ VALUES ('TV0303','S','42','40'),
 ('YN0101','XL','42','40'),
 ('KU8287','S','42','40')
 --Bảng vũ trang
-CREATE TABLE VuTrang(MaVuTrang nvarchar(10) NOT NULL,TenVuTrang nvarchar(50) NOT NULL,MoTa nvarchar(500),UNIQUE(TenVuTrang),PRIMARY KEY(MaVuTrang))--Thêm dữ liệu vào bảng Vũ TrangINSERT INTO VuTrangVALUES('AK81727',N'Súng ngắn',N'Súng ngắn là một súng cầm tay có thể được giữ và sử dụng bằng một tay. Hai loại súng ngắn phổ biến nhất được sử dụng hiện nay là súng ngắn ổ quay và súng ngắn bán tự động (semi-auto).'),('CKC9182',N'Súng trường',N'Súng trường (tiếng Anh: Rifle) là một loại súng cá nhân gọn nhẹ với nòng súng được chuốt rãnh xoắn,có báng súng và ốp lót tay hoàn chỉnh để phục vụ mục đích bắn điểm xạ'),('TL8626',N'Súng tiểu liên',N'Súng tiểu liên là loại vũ khí cá nhân tầm gần, thuộc họ súng máy, cũng thuộc họ súngtự động tùy theo phân loại của các quốc gia.'),('SBT7162',N'Súng bắn tỉa',N'Súng bắn tỉa (còn gọi là súng ngắm) là một loại súng trường chuyên dụng cho công việc bắn các mục tiêu ở khoảng cách xa với độ chính xác cao hơn bất kỳ loại súng cầm tay nào khác.')--Bảng đại độiCREATE TABLE DaiDoi(MaDaiDoi nvarchar(10) NOT NULL,TenDaiDoi nvarchar(50) NOT NULL,PRIMARY KEY (MaDaiDoi),UNIQUE (TenDaiDoi))--Thêm dữ liệu bảng Đại ĐộiINSERT INTO DaiDoiVALUES('DD001',N'Đại Đội 1'),('DD002',N'Đại Đội 2'),('DD003',N'Đại Đội 3'),('DD004',N'Đại Đội 4'),('DD005',N'Đại Đội 5'),('DD006',N'Đại Đội 6')--Bảng vũ trang và quân trang quân độiCREATE TABLE  QuanDungDaiDoi(ID int IDENTITY(1,1) NOT NULL,MaDaiDoi nvarchar(10) NOT NULL,MaVuTrang nvarchar(10) NOT NULL,MaQuanTrang nvarchar(10) NOT NULL,PRIMARY KEY (ID),FOREIGN KEY (MaDaiDoi) REFERENCES DaiDoi(MaDaiDoi),FOREIGN KEY (MaVuTrang) REFERENCES VuTrang(MaVuTrang),FOREIGN KEY (MaQuanTrang) REFERENCES QuanPhuc(MaQuanPhuc))--Thống kê số lượng quân phục và vũ trang đại đội cóCREATE TABLE ThongKeDaiDoi (MaThongKe int NOT NULL,MaDaiDoi nvarchar(10) NOT NULL,MaVuTrang nvarchar(10) NULL,SoLuongVuTrang int NULL,MaQuanTrang nvarchar(10) NULL,SoLuongQuanTrang int NULL,PRIMARY KEY (MaThongKe),FOREIGN KEY (MaThongKe) REFERENCES QuanDungDaiDoi(ID) ON DELETE CASCADE)--Thống kê số lượng quân nhân theo nămCREATE PROC sp_ThongKeQuanNhan
+CREATE TABLE VuTrang(MaVuTrang nvarchar(10) NOT NULL,TenVuTrang nvarchar(50) NOT NULL,MoTa nvarchar(500),UNIQUE(TenVuTrang),PRIMARY KEY(MaVuTrang))--Thêm dữ liệu vào bảng Vũ TrangINSERT INTO VuTrangVALUES('AK81727',N'Súng ngắn',N'Súng ngắn là một súng cầm tay có thể được giữ và sử dụng bằng một tay. Hai loại súng ngắn phổ biến nhất được sử dụng hiện nay là súng ngắn ổ quay và súng ngắn bán tự động (semi-auto).'),('CKC9182',N'Súng trường',N'Súng trường (tiếng Anh: Rifle) là một loại súng cá nhân gọn nhẹ với nòng súng được chuốt rãnh xoắn,có báng súng và ốp lót tay hoàn chỉnh để phục vụ mục đích bắn điểm xạ'),('TL8626',N'Súng tiểu liên',N'Súng tiểu liên là loại vũ khí cá nhân tầm gần, thuộc họ súng máy, cũng thuộc họ súngtự động tùy theo phân loại của các quốc gia.'),('SBT7162',N'Súng bắn tỉa',N'Súng bắn tỉa (còn gọi là súng ngắm) là một loại súng trường chuyên dụng cho công việc bắn các mục tiêu ở khoảng cách xa với độ chính xác cao hơn bất kỳ loại súng cầm tay nào khác.')--Bảng đại độiCREATE TABLE DaiDoi(MaDaiDoi nvarchar(10) NOT NULL,TenDaiDoi nvarchar(50) NOT NULL,PRIMARY KEY (MaDaiDoi),UNIQUE (TenDaiDoi))--Thêm dữ liệu bảng Đại ĐộiINSERT INTO DaiDoiVALUES('DD001',N'Đại Đội 1'),('DD002',N'Đại Đội 2'),('DD003',N'Đại Đội 3'),('DD004',N'Đại Đội 4'),('DD005',N'Đại Đội 5'),('DD006',N'Đại Đội 6')--Bảng vũ trang đại độiCREATE TABLE  VuTrangDaiDoi(ID int IDENTITY(1,1) NOT NULL,MaDaiDoi nvarchar(10) NOT NULL,MaVuTrang nvarchar(10) NOT NULL,SoLuong int NOT NULL,PRIMARY KEY (ID),FOREIGN KEY (MaDaiDoi) REFERENCES DaiDoi(MaDaiDoi),FOREIGN KEY (MaVuTrang) REFERENCES VuTrang(MaVuTrang))--Bảng quân phục đại độiCREATE TABLE  QuanPhucDaiDoi(ID int IDENTITY(1,1) NOT NULL,MaDaiDoi nvarchar(10) NOT NULL,MaQuanPhuc nvarchar(10) NOT NULL,SoLuong int NOT NULL,PRIMARY KEY (ID),FOREIGN KEY (MaDaiDoi) REFERENCES DaiDoi(MaDaiDoi),FOREIGN KEY (MaQuanPhuc) REFERENCES QuanPhuc(MaQuanPhuc))--Thống kê số lượng quân nhân theo nămCREATE PROC sp_ThongKeQuanNhan
 AS BEGIN
 SELECT
 YEAR(QuanNhan.NhapNgu) Nam,
@@ -133,5 +133,38 @@ COUNT(*) SoLuong
 FROM NhanQuanPhuc INNER JOIN QuanPhuc
 ON NhanQuanPhuc.MaQuanPhuc = QuanPhuc.MaQuanPhuc
 GROUP BY NhanQuanPhuc.MaQuanPhuc,QuanPhuc.TenQuanPhuc
+END
+--Thống kê số lượng quân phục còn lại
+CREATE PROC sp_ThongKeQuanPhucConLai
+AS BEGIN
+	SELECT QuanPhucDaiDoi.MaQuanPhuc MaQuanPhuc,
+	QuanPhuc.TenQuanPhuc TenQuanPhuc,
+	SUM(NhapQuanPhuc.SoLuong)-SUM(QuanPhucDaiDoi.SoLuong) SoLuong
+	FROM QuanPhucDaiDoi INNER JOIN QuanPhuc
+	ON QuanPhucDaiDoi.MaQuanPhuc = QuanPhuc.MaQuanPhuc
+	INNER JOIN NhapQuanPhuc 
+	ON QuanPhucDaiDoi.MaQuanPhuc = NhapQuanPhuc.MaQuanPhuc
+	GROUP BY QuanPhucDaiDoi.MaQuanPhuc,QuanPhuc.TenQuanPhuc
+END
+EXEC sp_ThongKeQuanPhucConLai
+--Thống kê tổng số lượng quân phục nhập vào
+CREATE PROC sp_ThongKeSoLuongQuanPhucNhapVao
+AS BEGIN
+	SELECT 
+	NhapQuanPhuc.MaQuanPhuc,
+	QuanPhuc.TenQuanPhuc,
+	SUM(NhapQuanPhuc.SoLuong) SoLuong
+	FROM NhapQuanPhuc INNER JOIN QuanPhuc
+	ON NhapQuanPhuc.MaQuanPhuc = QuanPhuc.MaQuanPhuc
+	GROUP BY NhapQuanPhuc.MaQuanPhuc,QuanPhuc.TenQuanPhuc
+END
+--Thống kê số lượng quân phục đã phát ở tổng các đại đội
+CREATE PROC sp_ThongKeQuanPhucDaPhatDaiDoi
+AS BEGIN
+	SELECT QuanPhucDaiDoi.MaQuanPhuc,
+	SUM(QuanPhucDaiDoi.SoLuong) SoLuong
+	FROM QuanPhucDaiDoi INNER JOIN QuanPhuc
+	ON QuanPhucDaiDoi.MaQuanPhuc = QuanPhuc.MaQuanPhuc
+	GROUP BY QuanPhucDaiDoi.MaQuanPhuc
 END
 

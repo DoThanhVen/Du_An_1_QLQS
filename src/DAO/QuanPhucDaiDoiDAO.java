@@ -4,7 +4,7 @@
  */
 package DAO;
 
-import Class.NhapQuanPhuc;
+import Class.QuanPhucDaiDoi;
 import Helper.JDBCHelper;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -15,43 +15,38 @@ import java.util.List;
  *
  * @author Admin
  */
-public class NhapQuanPhucDAO {
+public class QuanPhucDaiDoiDAO {
 
-    public void insert(NhapQuanPhuc model) {
-        String sql = "INSERT INTO NhapQuanPhuc (MaQuanPhuc,SoLuong,NgayNhap) VALUES (?, ?, ?)";
+    public void insert(QuanPhucDaiDoi model) {
+        String sql = "INSERT INTO QuanPhucDaiDoi (MaDaiDoi,MaQuanPhuc,SoLuong) VALUES (?, ?, ?)";
+        JDBCHelper.executeUpdate(sql,
+                model.getMaDaiDoi(),
+                model.getMaQuanPhuc(),
+                model.getSoLuong()
+        );
+    }
+
+    public void update(QuanPhucDaiDoi model) {
+        String sql = "UPDATE QuanPhucDaiDoi SET MaQuanPhuc  = ?,SoLuong = ? WHERE MaDaiDoi = ?";
         JDBCHelper.executeUpdate(sql,
                 model.getMaQuanPhuc(),
                 model.getSoLuong(),
-                model.getNgayNhap());
+                model.getMaDaiDoi());
     }
 
-    public void update(NhapQuanPhuc model) {
-        String sql = "UPDATE NhapQuanPhuc SET MaQuanPhuc  = ?, SoLuong = ?, NgayNhap = ? WHERE MaBienNhan = ?";
-        JDBCHelper.executeUpdate(sql,
-                model.getMaQuanPhuc(),
-                model.getSoLuong(),
-                model.getNgayNhap(),
-                model.getMaBienNhan());
-    }
-
-    public void delete(int id) {
-        String sql = "DELETE FROM NhapQuanPhuc WHERE MaBienNhan = ?";
-        JDBCHelper.executeUpdate(sql, id);
-    }
-
-    public List<NhapQuanPhuc> select() {
-        String sql = "SELECT * FROM NhapQuanPhuc";
+    public List<QuanPhucDaiDoi> select() {
+        String sql = "SELECT * FROM QuanPhucDaiDoi";
         return select(sql);
     }
 
-    private List<NhapQuanPhuc> select(String sql, Object... args) {
-        List<NhapQuanPhuc> list = new ArrayList<>();
+    private List<QuanPhucDaiDoi> select(String sql, Object... args) {
+        List<QuanPhucDaiDoi> list = new ArrayList<>();
         try {
             ResultSet rs = null;
             try {
                 rs = JDBCHelper.executeQuery(sql, args);
                 while (rs.next()) {
-                    NhapQuanPhuc model = readFromResultSet(rs);
+                    QuanPhucDaiDoi model = readFromResultSet(rs);
                     list.add(model);
                 }
             } finally {
@@ -63,8 +58,8 @@ public class NhapQuanPhucDAO {
         return list;
     }
 
-    private NhapQuanPhuc readFromResultSet(ResultSet rs) throws SQLException {
-        NhapQuanPhuc model = new NhapQuanPhuc();
+    private QuanPhucDaiDoi readFromResultSet(ResultSet rs) throws SQLException {
+        QuanPhucDaiDoi model = new QuanPhucDaiDoi();
         return model;
     }
 }

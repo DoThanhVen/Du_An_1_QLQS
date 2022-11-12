@@ -5,18 +5,27 @@
 package JPanel;
 
 import Class.NhapQuanPhuc;
+import DAO.NhapQuanPhucDAO;
+import Helper.DateHelper;
+import Helper.DialogHelper;
 import Helper.JDBCHelper;
 import JavaClass.Button;
+import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Font;
 import java.sql.ResultSet;
 import javax.swing.BorderFactory;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
  * @author Admin
  */
 public class NhapQuanPhucJPanel extends javax.swing.JPanel {
+
+    NhapQuanPhucDAO nhapDAO = new NhapQuanPhucDAO();
+    private int indexTable = -1;
 
     /**
      * Creates new form NhapQuanPhucJPanel
@@ -25,6 +34,16 @@ public class NhapQuanPhucJPanel extends javax.swing.JPanel {
         initComponents();
         Edit();
         fillCombobox();
+        fillTable();
+    }
+
+    void showForm(Component com
+    ) {
+        panelBorder1.removeAll();
+        panelBorder1.setLayout(new BorderLayout());
+        panelBorder1.add(com);
+        panelBorder1.repaint();
+        panelBorder1.revalidate();
     }
 
     void Edit() {
@@ -47,6 +66,13 @@ public class NhapQuanPhucJPanel extends javax.swing.JPanel {
         button4.setStyle(Button.ButtonStyle.DESTRUCTIVE);
         button4.setFont(new Font("sansserif", 1, 12));
         button4.setText("Mới");
+        button5.setStyle(Button.ButtonStyle.DESTRUCTIVE);
+        button5.setFont(new Font("sansserif", 1, 12));
+        button5.setText("QP Đại Đội");
+        button6.setStyle(Button.ButtonStyle.DESTRUCTIVE);
+        button6.setFont(new Font("sansserif", 1, 12));
+        button6.setText("Trở Lại");
+        txtSoLuongNhap.setHint("SL Nhập");
     }
 
     void fillCombobox() {
@@ -57,6 +83,57 @@ public class NhapQuanPhucJPanel extends javax.swing.JPanel {
                 cboQuanPhuc.addItem(rs.getString(1));
             }
             while (rs.next()) {
+            }
+        } catch (Exception e) {
+        }
+    }
+
+    void Load() {
+        txtSoLuongNhap.setText("");
+        txtSoLuongNhap.requestFocus();
+        indexTable = -1;
+    }
+
+    void insert() {
+        NhapQuanPhuc model = new NhapQuanPhuc();
+        String maQuanPhuc = "";
+        try {
+            String sql = "Select * FROM QuanPhuc";
+            ResultSet rs = JDBCHelper.executeQuery(sql);
+            while (rs.next()) {
+                if (rs.getString("TenQuanPhuc").equalsIgnoreCase(cboQuanPhuc.getSelectedItem().toString())) {
+                    maQuanPhuc = rs.getString("MaQuanPhuc");
+                    break;
+                }
+            }
+            model.setMaQuanPhuc(maQuanPhuc);
+            model.setNgayNhap(new java.sql.Date(DateHelper.now().getTime()));
+            model.setSoLuong(Integer.parseInt(txtSoLuongNhap.getText()));
+            try {
+                nhapDAO.insert(model);
+                fillTable();
+                Load();
+                DialogHelper.alert(this, "Nhập thành công!");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    void fillTable() {
+        DefaultTableModel model = (DefaultTableModel) tblQuanPhuc.getModel();
+        model.setRowCount(0);
+        try {
+            String sql = "EXEC sp_ThongKeSoLuongQuanPhucNhapVao";
+            ResultSet rs = JDBCHelper.executeQuery(sql);
+            while (rs.next()) {
+                Object[] row = {rs.getString(1),
+                    rs.getString(2),
+                    rs.getInt(3)
+                };
+                model.addRow(row);
             }
         } catch (Exception e) {
         }
@@ -79,6 +156,9 @@ public class NhapQuanPhucJPanel extends javax.swing.JPanel {
         button3 = new JavaClass.Button();
         button4 = new JavaClass.Button();
         cboQuanPhuc = new JavaClass.Combobox();
+        txtSoLuongNhap = new JavaClass.SearchText();
+        button5 = new JavaClass.Button();
+        button6 = new JavaClass.Button();
 
         panelBorder1.setBackground(new java.awt.Color(255, 255, 255));
         panelBorder1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -88,11 +168,11 @@ public class NhapQuanPhucJPanel extends javax.swing.JPanel {
 
             },
             new String [] {
-                "ID", "Mã Quân Phục", "Tên Quân Phục", "Số Lượng Nhập"
+                "Mã Quân Phục", "Tên Quân Phục", "Số Lượng Nhập"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false
+                false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -101,22 +181,39 @@ public class NhapQuanPhucJPanel extends javax.swing.JPanel {
         });
         scrollTable.setViewportView(tblQuanPhuc);
 
-        panelBorder1.add(scrollTable, new org.netbeans.lib.awtextra.AbsoluteConstraints(12, 257, 826, 230));
+        panelBorder1.add(scrollTable, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 150, 820, 320));
 
         button1.setText("button1");
-        panelBorder1.add(button1, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 200, 80, -1));
+        button1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                button1ActionPerformed(evt);
+            }
+        });
+        panelBorder1.add(button1, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 90, 90, -1));
 
         button2.setText("button2");
-        panelBorder1.add(button2, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 200, 80, -1));
+        panelBorder1.add(button2, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 90, 90, -1));
 
         button3.setText("button3");
-        panelBorder1.add(button3, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 200, 80, -1));
+        panelBorder1.add(button3, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 90, 90, -1));
 
         button4.setText("button4");
-        panelBorder1.add(button4, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 200, 80, -1));
+        panelBorder1.add(button4, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 90, 90, -1));
 
         cboQuanPhuc.setLabeText("");
-        panelBorder1.add(cboQuanPhuc, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 90, 350, -1));
+        panelBorder1.add(cboQuanPhuc, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 30, 320, -1));
+        panelBorder1.add(txtSoLuongNhap, new org.netbeans.lib.awtextra.AbsoluteConstraints(670, 50, 70, -1));
+
+        button5.setText("button5");
+        panelBorder1.add(button5, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 90, 90, -1));
+
+        button6.setText("button6");
+        button6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                button6ActionPerformed(evt);
+            }
+        });
+        panelBorder1.add(button6, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 30, 90, -1));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -129,19 +226,29 @@ public class NhapQuanPhucJPanel extends javax.swing.JPanel {
             .addComponent(panelBorder1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
-void insert() {
-        NhapQuanPhuc model = new NhapQuanPhuc();
-        model.setMaQuanPhuc(TOOL_TIP_TEXT_KEY);
-    }
+
+    private void button6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_button6ActionPerformed
+        // TODO add your handling code here:
+        showForm(new FormQuanPhuc());
+    }//GEN-LAST:event_button6ActionPerformed
+
+    private void button1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_button1ActionPerformed
+        // TODO add your handling code here:
+        insert();
+    }//GEN-LAST:event_button1ActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private JavaClass.Button button1;
     private JavaClass.Button button2;
     private JavaClass.Button button3;
     private JavaClass.Button button4;
+    private JavaClass.Button button5;
+    private JavaClass.Button button6;
     private JavaClass.Combobox cboQuanPhuc;
     private JPanel.PanelBorder panelBorder1;
     private javax.swing.JScrollPane scrollTable;
     private JavaClass.TableQuanPhuc tblQuanPhuc;
+    private JavaClass.SearchText txtSoLuongNhap;
     // End of variables declaration//GEN-END:variables
 }
