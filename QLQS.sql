@@ -135,18 +135,14 @@ ON NhanQuanPhuc.MaQuanPhuc = QuanPhuc.MaQuanPhuc
 GROUP BY NhanQuanPhuc.MaQuanPhuc,QuanPhuc.TenQuanPhuc
 END
 --Thống kê số lượng quân phục còn lại
-CREATE PROC sp_ThongKeQuanPhucConLai
+CREATE PROC sp_ThongKeQuanPhuc @MaQuanPhuc nvarchar(10)
 AS BEGIN
-	SELECT QuanPhucDaiDoi.MaQuanPhuc MaQuanPhuc,
-	QuanPhuc.TenQuanPhuc TenQuanPhuc,
-	SUM(NhapQuanPhuc.SoLuong)-SUM(QuanPhucDaiDoi.SoLuong) SoLuong
-	FROM QuanPhucDaiDoi INNER JOIN QuanPhuc
-	ON QuanPhucDaiDoi.MaQuanPhuc = QuanPhuc.MaQuanPhuc
-	INNER JOIN NhapQuanPhuc 
-	ON QuanPhucDaiDoi.MaQuanPhuc = NhapQuanPhuc.MaQuanPhuc
-	GROUP BY QuanPhucDaiDoi.MaQuanPhuc,QuanPhuc.TenQuanPhuc
+	DECLARE @Phat int
+	DECLARE @Nhap int
+		SELECT @Phat = SUM(SoLuong) FROM QuanPhucDaiDoi WHERE MaQuanPhuc = @MaQuanPhuc GROUP BY MaQuanPhuc
+		SELECT @Nhap = SUM(SoLuong) FROM NhapQuanPhuc WHERE MaQuanPhuc = @MaQuanPhuc GROUP BY MaQuanPhuc
+		SELECT @Nhap - @Phat AS ConLai
 END
-EXEC sp_ThongKeQuanPhucConLai
 --Thống kê tổng số lượng quân phục nhập vào
 CREATE PROC sp_ThongKeSoLuongQuanPhucNhapVao
 AS BEGIN

@@ -32,7 +32,6 @@ public class QuanPhucDaiDoiJPanel extends javax.swing.JPanel {
         addItem();
         fillTable();
         Edit();
-        fillCombobox();
     }
 
     void Edit() {
@@ -46,6 +45,7 @@ public class QuanPhucDaiDoiJPanel extends javax.swing.JPanel {
         button3.setFont(new Font("sansserif", 1, 12));
         button3.setText("Sửa");
         txtSoLuongNhap.setHint("Số lượng");
+        txtTenQuanPhuc.setHint("Tên quân phục");
     }
 
     void addItem() {
@@ -71,7 +71,7 @@ public class QuanPhucDaiDoiJPanel extends javax.swing.JPanel {
             String sql = "EXEC sp_ThongKeSoLuongQuanPhucNhapVao";
             ResultSet rs = JDBCHelper.executeQuery(sql);
             while (rs.next()) {
-                cboQuanPhuc.addItem(rs.getString(2));
+                txtTenQuanPhuc.setText(rs.getString(2));
             }
         } catch (Exception e) {
         }
@@ -115,7 +115,7 @@ public class QuanPhucDaiDoiJPanel extends javax.swing.JPanel {
         button2 = new JavaClass.Button();
         button3 = new JavaClass.Button();
         jLabel1 = new javax.swing.JLabel();
-        cboQuanPhuc = new JavaClass.Combobox();
+        txtTenQuanPhuc = new JavaClass.SearchText();
 
         panelBorder1.setBackground(new java.awt.Color(255, 255, 255));
         panelBorder1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -169,13 +169,8 @@ public class QuanPhucDaiDoiJPanel extends javax.swing.JPanel {
         jLabel1.setText("Có:");
         panelBorder1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 60, -1, -1));
 
-        cboQuanPhuc.setLabeText("");
-        cboQuanPhuc.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                cboQuanPhucItemStateChanged(evt);
-            }
-        });
-        panelBorder1.add(cboQuanPhuc, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 40, 250, -1));
+        txtTenQuanPhuc.setEditable(false);
+        panelBorder1.add(txtTenQuanPhuc, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 60, 220, -1));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -204,57 +199,40 @@ public class QuanPhucDaiDoiJPanel extends javax.swing.JPanel {
     private void tblQuanPhucMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblQuanPhucMouseClicked
         // TODO add your handling code here:
         indexTable = tblQuanPhuc.getSelectedRow();
+        int soLuongCo = -1;
         try {
             if (indexTable == -1) {
                 DialogHelper.alert(this, "Vui lòng chọn quân phục cần thêm!");
             } else {
-
+                txtTenQuanPhuc.setText(tblQuanPhuc.getValueAt(indexTable, 2).toString());
+                try {
+                    String sql = "EXEC sp_ThongKeQuanPhucConLai";
+                    ResultSet rs = JDBCHelper.executeQuery(sql);
+                    while (rs.next()) {
+                        if (rs.getString("MaQuanPhuc").equalsIgnoreCase(tblQuanPhuc.getValueAt(indexTable, 1).toString())) {
+                            soLuongCo = rs.getInt("SoLuong");
+                            break;
+                        }
+                    }
+                    if (soLuongCo == -1) {
+                        txtSoLuongCo.setText("0");
+                    } else {
+                        txtSoLuongCo.setText(String.valueOf(soLuongCo));
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         } catch (Exception e) {
+            e.printStackTrace();
         }
     }//GEN-LAST:event_tblQuanPhucMouseClicked
-
-    private void cboQuanPhucItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cboQuanPhucItemStateChanged
-        // TODO add your handling code here:
-//        if (indexCBO == -1) {
-//            indexCBO = cboQuanPhuc.getSelectedIndex();
-//        } else {
-//            String maQuanPhuc = "";
-//            try {
-//                String sql = "Select * FROM QuanPhuc";
-//                ResultSet rs = JDBCHelper.executeQuery(sql);
-//                while (rs.next()) {
-//                    if (cboQuanPhuc.setSelectedIndex(indexCBO).toString().equalsIgnoreCase(rs.getString("TenQuanPhuc"))) {
-//                        maQuanPhuc = rs.getString("MaQuanPhuc");
-//                        break;
-//                    }
-//                }
-//                try {
-//                    String sqlLoad = "SELECT \n"
-//                            + "SUM(NhapQuanPhuc.SoLuong) SoLuong\n"
-//                            + "FROM NhapQuanPhuc INNER JOIN QuanPhuc\n"
-//                            + "ON NhapQuanPhuc.MaQuanPhuc = QuanPhuc.MaQuanPhuc\n"
-//                            + "WHERE QuanPhuc.MaQuanPhuc = '" + maQuanPhuc + "' \n"
-//                            + "GROUP BY NhapQuanPhuc.MaQuanPhuc,QuanPhuc.TenQuanPhuc";
-//                    ResultSet rst = JDBCHelper.executeQuery(sql);
-//                    while (rs.next()) {
-//                        txtSoLuongCo.setText(String.valueOf(rst.getInt(1)));
-//                    }
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//        }
-    }//GEN-LAST:event_cboQuanPhucItemStateChanged
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private JavaClass.Button button1;
     private JavaClass.Button button2;
     private JavaClass.Button button3;
-    private JavaClass.Combobox cboQuanPhuc;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblDaiDoi;
@@ -262,5 +240,6 @@ public class QuanPhucDaiDoiJPanel extends javax.swing.JPanel {
     private JavaClass.TableQuanPhuc tblQuanPhuc;
     private JavaClass.SearchText txtSoLuongCo;
     private JavaClass.SearchText txtSoLuongNhap;
+    private JavaClass.SearchText txtTenQuanPhuc;
     // End of variables declaration//GEN-END:variables
 }
