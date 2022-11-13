@@ -51,6 +51,7 @@ public class FormQuanNhan extends javax.swing.JPanel {
         fillTableQuanNhan();
         setSizeTable();
         addSearchItem();
+        fillDonVi();
         txtHoTen.setHint("Tên Quân Nhân");
         txtDonVi.setHint("Địa Chỉ");
         txtNgaySinh.setHint("Ngày Sinh");
@@ -95,6 +96,17 @@ public class FormQuanNhan extends javax.swing.JPanel {
         tblQuanNhan.getColumnModel().getColumn(0).setPreferredWidth(35);
         tblQuanNhan.getColumnModel().getColumn(1).setPreferredWidth(130);
         tblQuanNhan.getColumnModel().getColumn(2).setPreferredWidth(80);
+    }
+
+    void fillDonVi() {
+        try {
+            String sql = "Select * FROM DaiDoi";
+            ResultSet rs = JDBCHelper.executeQuery(sql);
+            while (rs.next()) {
+                cboDonVi.addItem(rs.getString("TenDaiDoi"));
+            }
+        } catch (Exception e) {
+        }
     }
 
     void loadData(String where) {
@@ -240,6 +252,7 @@ public class FormQuanNhan extends javax.swing.JPanel {
         button4 = new JavaClass.Button();
         txtMaQN = new JavaClass.SearchText();
         button5 = new JavaClass.Button();
+        cboDonVi = new JavaClass.Combobox();
 
         panelBorder2.setBackground(new java.awt.Color(255, 255, 255));
         panelBorder2.setPreferredSize(new java.awt.Dimension(709, 312));
@@ -290,28 +303,28 @@ public class FormQuanNhan extends javax.swing.JPanel {
             }
         });
         panelBorder2.add(txtSearch, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 0, 200, -1));
-        panelBorder2.add(txtHoTen, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 40, 180, -1));
-        panelBorder2.add(txtDonVi, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 40, 180, -1));
-        panelBorder2.add(txtNgaySinh, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 120, 180, -1));
+        panelBorder2.add(txtHoTen, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 50, 180, -1));
+        panelBorder2.add(txtDonVi, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 50, 180, -1));
+        panelBorder2.add(txtNgaySinh, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 130, 180, -1));
 
         cboQuanHam.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Đại tướng", "Thượng tướng", "Trung tướng", "Thiếu tướng ", "Đại tá", "Thượng tá", "Trung tá", "Thiếu tá", "Đại úy", "Thượng úy ", "Trung úy", "Thiếu úy", "Thượng sĩ", "Trung sĩ", "Hạ sĩ", "Học viên", "Binh nhất", "Binh nhì" }));
         cboQuanHam.setLabeText("");
-        panelBorder2.add(cboQuanHam, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 100, 185, 40));
+        panelBorder2.add(cboQuanHam, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 110, 185, 40));
 
         rdoNam.setBackground(new java.awt.Color(255, 255, 255));
         buttonGroup1.add(rdoNam);
         rdoNam.setText("Nam");
-        panelBorder2.add(rdoNam, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 80, -1, -1));
+        panelBorder2.add(rdoNam, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 90, -1, -1));
 
         rdoNu.setBackground(new java.awt.Color(255, 255, 255));
         buttonGroup1.add(rdoNu);
         rdoNu.setText("Nữ");
-        panelBorder2.add(rdoNu, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 80, -1, -1));
+        panelBorder2.add(rdoNu, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 90, -1, -1));
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jLabel2.setText("Giới tính:");
-        panelBorder2.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 80, -1, -1));
-        panelBorder2.add(txtNgayNhapNgu, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 80, 180, -1));
+        panelBorder2.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 90, -1, -1));
+        panelBorder2.add(txtNgayNhapNgu, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 90, 180, -1));
 
         button1.setText("button1");
         panelBorder2.add(button1, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 160, 90, -1));
@@ -328,7 +341,7 @@ public class FormQuanNhan extends javax.swing.JPanel {
 
         txtMaQN.setForeground(new java.awt.Color(255, 0, 0));
         txtMaQN.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        panelBorder2.add(txtMaQN, new org.netbeans.lib.awtextra.AbsoluteConstraints(75, 190, 50, -1));
+        panelBorder2.add(txtMaQN, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 50, 180, -1));
 
         button5.setText("button5");
         button5.addActionListener(new java.awt.event.ActionListener() {
@@ -337,6 +350,9 @@ public class FormQuanNhan extends javax.swing.JPanel {
             }
         });
         panelBorder2.add(button5, new org.netbeans.lib.awtextra.AbsoluteConstraints(620, 160, 90, -1));
+
+        cboDonVi.setLabeText("");
+        panelBorder2.add(cboDonVi, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 80, 190, -1));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -453,6 +469,7 @@ public class FormQuanNhan extends javax.swing.JPanel {
     private JavaClass.Button button4;
     private JavaClass.Button button5;
     private javax.swing.ButtonGroup buttonGroup1;
+    private JavaClass.Combobox cboDonVi;
     private JavaClass.Combobox cboQuanHam;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

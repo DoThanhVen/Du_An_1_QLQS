@@ -5,16 +5,19 @@
 package JPanel;
 
 import Class.QuanPhuc;
+import Helper.JDBCHelper;
 import java.awt.Color;
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
  * @author Admin
  */
 public class ThongKeQuanPhucConLaiJPanel extends javax.swing.JPanel {
-
+    
     List<QuanPhuc> ListQP = new ArrayList<>();
 
     /**
@@ -24,7 +27,7 @@ public class ThongKeQuanPhucConLaiJPanel extends javax.swing.JPanel {
         initComponents();
         init();
     }
-
+    
     void init() {
         scrollTable.setVerticalScrollBar(new JavaClass.ScrollBar());
         scrollTable.getVerticalScrollBar().setBackground(Color.WHITE);
@@ -35,17 +38,22 @@ public class ThongKeQuanPhucConLaiJPanel extends javax.swing.JPanel {
         fillTableQuanPhucDaPhat();
         tblQuanPhuc.setLocation(10, 100);
     }
-
+    
     void fillTableQuanPhucDaPhat() {
-        ListQP.add(new QuanPhuc(1, 200, "Áo Ba Lỗ"));
-        ListQP.add(new QuanPhuc(2, 1000, "Nội Vụ"));
-        ListQP.add(new QuanPhuc(3, 214, "Ak47"));
-        ListQP.add(new QuanPhuc(4, 300, "Mũ Cối"));
-        ListQP.add(new QuanPhuc(5, 250, "Quân Phục"));
-        ListQP.add(new QuanPhuc(6, 80, "Dây Nịt"));
-        for (QuanPhuc qp : ListQP) {
-            Object[] row = new Object[]{qp.getMaQP(), qp.getTenQP(), qp.getSoLuong()};
-            tblQuanPhuc.addRow(row);
+        DefaultTableModel model = (DefaultTableModel) tblQuanPhuc.getModel();
+        model.setRowCount(0);
+        try {
+            String sql = "Select * FROM QuanPhuc";
+            ResultSet rs = JDBCHelper.executeQuery(sql);
+            while (rs.next()) {
+                String sqlLoadData = "EXEC sp_ThongKeQuanPhuc '" + rs.getString("MaQuanPhuc") + "'";
+                ResultSet rst = JDBCHelper.executeQuery(sqlLoadData);
+                while (rst.next()) {
+                    Object[] row = {rs.getString("MaQuanPhuc"), rs.getString("TenQuanPhuc"), rst.getInt(1)};
+                    model.addRow(row);
+                }
+            }
+        } catch (Exception e) {
         }
     }
 

@@ -113,17 +113,18 @@ VALUES ('TV0303','S','42','40'),
 ('YN0101','XL','42','40'),
 ('KU8287','S','42','40')
 --Bảng vũ trang
-CREATE TABLE VuTrang(MaVuTrang nvarchar(10) NOT NULL,TenVuTrang nvarchar(50) NOT NULL,MoTa nvarchar(500),UNIQUE(TenVuTrang),PRIMARY KEY(MaVuTrang))--Thêm dữ liệu vào bảng Vũ TrangINSERT INTO VuTrangVALUES('AK81727',N'Súng ngắn',N'Súng ngắn là một súng cầm tay có thể được giữ và sử dụng bằng một tay. Hai loại súng ngắn phổ biến nhất được sử dụng hiện nay là súng ngắn ổ quay và súng ngắn bán tự động (semi-auto).'),('CKC9182',N'Súng trường',N'Súng trường (tiếng Anh: Rifle) là một loại súng cá nhân gọn nhẹ với nòng súng được chuốt rãnh xoắn,có báng súng và ốp lót tay hoàn chỉnh để phục vụ mục đích bắn điểm xạ'),('TL8626',N'Súng tiểu liên',N'Súng tiểu liên là loại vũ khí cá nhân tầm gần, thuộc họ súng máy, cũng thuộc họ súngtự động tùy theo phân loại của các quốc gia.'),('SBT7162',N'Súng bắn tỉa',N'Súng bắn tỉa (còn gọi là súng ngắm) là một loại súng trường chuyên dụng cho công việc bắn các mục tiêu ở khoảng cách xa với độ chính xác cao hơn bất kỳ loại súng cầm tay nào khác.')--Bảng đại độiCREATE TABLE DaiDoi(MaDaiDoi nvarchar(10) NOT NULL,TenDaiDoi nvarchar(50) NOT NULL,PRIMARY KEY (MaDaiDoi),UNIQUE (TenDaiDoi))--Thêm dữ liệu bảng Đại ĐộiINSERT INTO DaiDoiVALUES('DD001',N'Đại Đội 1'),('DD002',N'Đại Đội 2'),('DD003',N'Đại Đội 3'),('DD004',N'Đại Đội 4'),('DD005',N'Đại Đội 5'),('DD006',N'Đại Đội 6')--Bảng vũ trang đại độiCREATE TABLE  VuTrangDaiDoi(ID int IDENTITY(1,1) NOT NULL,MaDaiDoi nvarchar(10) NOT NULL,MaVuTrang nvarchar(10) NOT NULL,SoLuong int NOT NULL,PRIMARY KEY (ID),FOREIGN KEY (MaDaiDoi) REFERENCES DaiDoi(MaDaiDoi),FOREIGN KEY (MaVuTrang) REFERENCES VuTrang(MaVuTrang))--Bảng quân phục đại độiCREATE TABLE  QuanPhucDaiDoi(ID int IDENTITY(1,1) NOT NULL,MaDaiDoi nvarchar(10) NOT NULL,MaQuanPhuc nvarchar(10) NOT NULL,SoLuong int NOT NULL,PRIMARY KEY (ID),FOREIGN KEY (MaDaiDoi) REFERENCES DaiDoi(MaDaiDoi),FOREIGN KEY (MaQuanPhuc) REFERENCES QuanPhuc(MaQuanPhuc))--Thống kê số lượng quân nhân theo nămCREATE PROC sp_ThongKeQuanNhan
+CREATE TABLE VuTrang(MaVuTrang nvarchar(10) NOT NULL,TenVuTrang nvarchar(50) NOT NULL,MoTa nvarchar(500),UNIQUE(TenVuTrang),PRIMARY KEY(MaVuTrang))--Thêm dữ liệu vào bảng Vũ TrangINSERT INTO VuTrangVALUES('AK81727',N'Súng ngắn',N'Súng ngắn là một súng cầm tay có thể được giữ và sử dụng bằng một tay. Hai loại súng ngắn phổ biến nhất được sử dụng hiện nay là súng ngắn ổ quay và súng ngắn bán tự động (semi-auto).'),('CKC9182',N'Súng trường',N'Súng trường (tiếng Anh: Rifle) là một loại súng cá nhân gọn nhẹ với nòng súng được chuốt rãnh xoắn,có báng súng và ốp lót tay hoàn chỉnh để phục vụ mục đích bắn điểm xạ'),('TL8626',N'Súng tiểu liên',N'Súng tiểu liên là loại vũ khí cá nhân tầm gần, thuộc họ súng máy, cũng thuộc họ súngtự động tùy theo phân loại của các quốc gia.'),('SBT7162',N'Súng bắn tỉa',N'Súng bắn tỉa (còn gọi là súng ngắm) là một loại súng trường chuyên dụng cho công việc bắn các mục tiêu ở khoảng cách xa với độ chính xác cao hơn bất kỳ loại súng cầm tay nào khác.')--Bảng đại độiCREATE TABLE DaiDoi(MaDaiDoi nvarchar(10) NOT NULL,TenDaiDoi nvarchar(50) NOT NULL,PRIMARY KEY (MaDaiDoi),UNIQUE (TenDaiDoi))--Thêm dữ liệu bảng Đại ĐộiINSERT INTO DaiDoiVALUES('DD001',N'Đại Đội 1'),('DD002',N'Đại Đội 2'),('DD003',N'Đại Đội 3'),('DD004',N'Đại Đội 4'),('DD005',N'Đại Đội 5'),('DD006',N'Đại Đội 6')--Bảng vũ trang đại độiCREATE TABLE  VuTrangDaiDoi(ID int IDENTITY(1,1) NOT NULL,MaDaiDoi nvarchar(10) NOT NULL,MaVuTrang nvarchar(10) NOT NULL,SoLuong int NOT NULL,PRIMARY KEY (ID),FOREIGN KEY (MaDaiDoi) REFERENCES DaiDoi(MaDaiDoi),FOREIGN KEY (MaVuTrang) REFERENCES VuTrang(MaVuTrang))--Bảng quân phục đại độiCREATE TABLE  QuanPhucDaiDoi(ID int IDENTITY(1,1) NOT NULL,MaDaiDoi nvarchar(10) NOT NULL,MaQuanPhuc nvarchar(10) NOT NULL,SoLuong int NOT NULL,PRIMARY KEY (ID),FOREIGN KEY (MaDaiDoi) REFERENCES DaiDoi(MaDaiDoi),FOREIGN KEY (MaQuanPhuc) REFERENCES QuanPhuc(MaQuanPhuc))--Thống kê số lượng quân nhân theo nămCREATE PROC sp_ThongKeQuanNhan @year int
 AS BEGIN
-SELECT
-YEAR(QuanNhan.NhapNgu) Nam,
-QuanNhan.DonVi,
-COUNT(*) SoLuong
-FROM QuanNhan INNER JOIN DaiDoi
-ON QuanNhan.DonVi = DaiDoi.MaDaiDoi
-GROUP BY YEAR(NhapNgu),DonVi
+	SELECT
+	YEAR(QuanNhan.NhapNgu) Nam,
+	QuanNhan.DonVi,
+	COUNT(*) SoLuong
+	FROM QuanNhan INNER JOIN DaiDoi
+	ON QuanNhan.DonVi = DaiDoi.MaDaiDoi
+	WHERE YEAR(QuanNhan.NhapNgu) = @year
+	GROUP BY YEAR(NhapNgu),DonVi
 END
---Thống kê số lượng quân phục đã phát
+--Thống kê tổng số lượng quân phục đã phát cho quân nhân ở tổng các đại đội
 CREATE PROC sp_ThongKeQuanPhucDaPhat
 AS BEGIN
 SELECT
@@ -134,8 +135,8 @@ FROM NhanQuanPhuc INNER JOIN QuanPhuc
 ON NhanQuanPhuc.MaQuanPhuc = QuanPhuc.MaQuanPhuc
 GROUP BY NhanQuanPhuc.MaQuanPhuc,QuanPhuc.TenQuanPhuc
 END
---Thống kê số lượng quân phục còn lại
-CREATE PROC sp_ThongKeQuanPhuc @MaQuanPhuc nvarchar(10)
+--Thống kê số lượng quân phục còn lại sau khi cấp phát cho các đại đội
+CREATE PROC sp_ThongKeQuanPhucConLai @MaQuanPhuc nvarchar(10)
 AS BEGIN
 	DECLARE @Phat int
 	DECLARE @Nhap int
@@ -154,13 +155,25 @@ AS BEGIN
 	ON NhapQuanPhuc.MaQuanPhuc = QuanPhuc.MaQuanPhuc
 	GROUP BY NhapQuanPhuc.MaQuanPhuc,QuanPhuc.TenQuanPhuc
 END
---Thống kê số lượng quân phục đã phát ở tổng các đại đội
+--Thống kê số lượng quân phục đã cấp cho tổng các đại đội
 CREATE PROC sp_ThongKeQuanPhucDaPhatDaiDoi
 AS BEGIN
 	SELECT QuanPhucDaiDoi.MaQuanPhuc,
+	QuanPhuc.TenQuanPhuc TenQuanPhuc,
 	SUM(QuanPhucDaiDoi.SoLuong) SoLuong
 	FROM QuanPhucDaiDoi INNER JOIN QuanPhuc
 	ON QuanPhucDaiDoi.MaQuanPhuc = QuanPhuc.MaQuanPhuc
-	GROUP BY QuanPhucDaiDoi.MaQuanPhuc
+	GROUP BY QuanPhucDaiDoi.MaQuanPhuc,QuanPhuc.TenQuanPhuc
+END
+--Thống kê quân phục đã phát ở riêng các đội
+CREATE PROC sp_ThongKeQuanPhucDaiDoi @MaQuanPhuc nvarchar(10),@MaDonVi nvarchar(10)
+AS BEGIN
+	DECLARE @DaPhat int
+	DECLARE @Tong int
+		SELECT @DaPhat = COUNT(*) FROM NhanQuanPhuc INNER JOIN QuanNhan 
+		ON NhanQuanPhuc.MaDinhDanh = QuanNhan.MaDinhDanh WHERE NhanQuanPhuc.MaQuanPhuc = @MaQuanPhuc 
+		AND QuanNhan.DonVi = @MaDonVi GROUP BY NhanQuanPhuc.MaQuanPhuc
+		SELECT @Tong= SUM(SoLuong) FROM QuanPhucDaiDoi WHERE MaQuanPhuc = @MaQuanPhuc AND QuanPhucDaiDoi.MaDaiDoi = @MaDonVi GROUP BY MaQuanPhuc
+		SELECT @Tong AS Tong, @DaPhat AS DaPhat, @Tong - @DaPhat AS ConLai
 END
 

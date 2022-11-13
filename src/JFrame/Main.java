@@ -43,7 +43,7 @@ public class Main extends javax.swing.JFrame {
         menu.setBackground(new Color(130, 148, 96));
         menu.addItem("Trang Chủ");
         menu.addItem("Quản Lý", "Đại Đội", "Vũ Trang", "Quân Nhân", "Quân Phục");
-        menu.addItem("Thống Kê", "Số Lượng Quân Nhân", "Quân Phục Nhập Vào", "Quân Phục Đã Phát", "Quân Phục Còn Lại", "Nhận Quân Phục");
+        menu.addItem("Thống Kê", "Số Lượng Quân Nhân", "Quân Phục Nhập Vào", "Quân Phục Tổng Các Đại Đội", "Quân Phục Còn Lại Trong Kho", "Nhận Quân Phục","Vũ Trang Nhập Vào");
         menu.addItem("Kết Thúc");
         menu.addItem("Trợ Giúp", "Đổi Mật Khẩu", "Hướng Dẫn");
         menu.applay(this);

@@ -20,7 +20,7 @@ import javax.swing.table.DefaultTableModel;
  * @author Admin
  */
 public class QuanPhucDaiDoiJPanel extends javax.swing.JPanel {
-
+    
     QuanPhucDaiDoiDAO qpddDAO = new QuanPhucDaiDoiDAO();
     private int indexTable = -1, indexCBO = -1;
 
@@ -29,11 +29,10 @@ public class QuanPhucDaiDoiJPanel extends javax.swing.JPanel {
      */
     public QuanPhucDaiDoiJPanel() {
         initComponents();
-        addItem();
         fillTable();
         Edit();
     }
-
+    
     void Edit() {
         button1.setStyle(Button.ButtonStyle.DESTRUCTIVE);
         button1.setFont(new Font("sansserif", 1, 12));
@@ -47,7 +46,16 @@ public class QuanPhucDaiDoiJPanel extends javax.swing.JPanel {
         txtSoLuongNhap.setHint("Số lượng");
         txtTenQuanPhuc.setHint("Tên quân phục");
     }
-
+    
+    void Load() {
+        txtSoLuongCo.setText("");
+        txtTenQuanPhuc.setText("");
+        txtSoLuongNhap.setText("");
+        tblQuanPhuc.removeAll();
+        indexCBO = -1;
+        indexTable = -1;
+    }
+    
     void addItem() {
         QuanPhucDaiDoi model = new QuanPhucDaiDoi();
         try {
@@ -65,7 +73,7 @@ public class QuanPhucDaiDoiJPanel extends javax.swing.JPanel {
         } catch (Exception e) {
         }
     }
-
+    
     void fillCombobox() {
         try {
             String sql = "EXEC sp_ThongKeSoLuongQuanPhucNhapVao";
@@ -76,20 +84,26 @@ public class QuanPhucDaiDoiJPanel extends javax.swing.JPanel {
         } catch (Exception e) {
         }
     }
-
+    
     void fillTable() {
         lblDaiDoi.setText("Đại Đội: " + DaiDoiJPanel.tenDaiDoi);
         DefaultTableModel model = (DefaultTableModel) tblQuanPhuc.getModel();
+        model.setRowCount(0);
         try {
             String sql = "Select QuanPhucDaiDoi.MaQuanPhuc,\n"
-                    + "QuanPhuc.TenQuanPhuc,QuanPhucDaiDoi.SoLuong\n"
+                    + "QuanPhuc.TenQuanPhuc\n"
                     + "FROM QuanPhucDaiDoi INNER JOIN QuanPhuc\n"
                     + "On QuanPhucDaiDoi.MaQuanPhuc = QuanPhuc.MaQuanPhuc \n"
-                    + "WHERE QuanPhucDaiDoi.MaDaiDoi = '" + DaiDoiJPanel.maDaiDoi + "'";
+                    + "WHERE QuanPhucDaiDoi.MaDaiDoi = '" + DaiDoiJPanel.maDaiDoi + "'"
+                    + "GROUP BY QuanPhucDaiDoi.MaQuanPhuc,QuanPhuc.TenQuanPhuc";
             ResultSet rs = JDBCHelper.executeQuery(sql);
             while (rs.next()) {
-                Object[] row = {DaiDoiJPanel.maDaiDoi, rs.getString(1), rs.getString(2), rs.getInt(3)};
-                model.addRow(row);
+                String sqlLoadData = "EXEC sp_ThongKeQuanPhucDaiDoi '" + rs.getString(1) + "','" + DaiDoiJPanel.maDaiDoi + "'";
+                ResultSet rst = JDBCHelper.executeQuery(sqlLoadData);
+                while (rst.next()) {
+                    Object[] row = {DaiDoiJPanel.maDaiDoi, rs.getString(1), rs.getString(2), rst.getInt(1), rst.getInt(2), rst.getInt(3)};
+                    model.addRow(row);
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -125,11 +139,11 @@ public class QuanPhucDaiDoiJPanel extends javax.swing.JPanel {
 
             },
             new String [] {
-                "Mã Đại Đội", "Mã Quân Phuc", "Tên Quân Phục", "Số Lượng"
+                "Mã Đại Đội", "Mã Quân Phuc", "Tên Quân Phục", "Số Lượng Nhập", "Đã Phát", "Còn Lại"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false
+                false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -143,7 +157,7 @@ public class QuanPhucDaiDoiJPanel extends javax.swing.JPanel {
         });
         jScrollPane1.setViewportView(tblQuanPhuc);
 
-        panelBorder1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 152, 820, 330));
+        panelBorder1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 152, 810, 330));
 
         button1.setText("button1");
         button1.addActionListener(new java.awt.event.ActionListener() {
@@ -161,6 +175,11 @@ public class QuanPhucDaiDoiJPanel extends javax.swing.JPanel {
         panelBorder1.add(txtSoLuongNhap, new org.netbeans.lib.awtextra.AbsoluteConstraints(590, 60, 70, -1));
 
         button2.setText("button2");
+        button2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                button2ActionPerformed(evt);
+            }
+        });
         panelBorder1.add(button2, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 100, 80, -1));
 
         button3.setText("button3");
@@ -206,18 +225,10 @@ public class QuanPhucDaiDoiJPanel extends javax.swing.JPanel {
             } else {
                 txtTenQuanPhuc.setText(tblQuanPhuc.getValueAt(indexTable, 2).toString());
                 try {
-                    String sql = "EXEC sp_ThongKeQuanPhucConLai";
+                    String sql = "EXEC sp_ThongKeQuanPhucConLai '" + tblQuanPhuc.getValueAt(indexTable, 1).toString() + "'";
                     ResultSet rs = JDBCHelper.executeQuery(sql);
                     while (rs.next()) {
-                        if (rs.getString("MaQuanPhuc").equalsIgnoreCase(tblQuanPhuc.getValueAt(indexTable, 1).toString())) {
-                            soLuongCo = rs.getInt("SoLuong");
-                            break;
-                        }
-                    }
-                    if (soLuongCo == -1) {
-                        txtSoLuongCo.setText("0");
-                    } else {
-                        txtSoLuongCo.setText(String.valueOf(soLuongCo));
+                        txtSoLuongCo.setText(String.valueOf(rs.getInt(1)));
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -227,6 +238,37 @@ public class QuanPhucDaiDoiJPanel extends javax.swing.JPanel {
             e.printStackTrace();
         }
     }//GEN-LAST:event_tblQuanPhucMouseClicked
+    void insert(int index) {
+        QuanPhucDaiDoi model = new QuanPhucDaiDoi();
+        model.setMaDaiDoi(DaiDoiJPanel.maDaiDoi);
+        model.setMaQuanPhuc(tblQuanPhuc.getValueAt(index, 1).toString());
+        model.setSoLuong(Integer.parseInt(txtSoLuongNhap.getText()));
+        try {
+            qpddDAO.insert(model);
+            Load();
+            fillTable();
+            DialogHelper.alert(this, "Thêm thành công!");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    private void button2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_button2ActionPerformed
+        // TODO add your handling code here:
+        indexTable = tblQuanPhuc.getSelectedRow();
+        try {
+            if (indexTable == -1) {
+                DialogHelper.alert(this, "Vui lòng chọn quân phục cần thêm!");
+            } else {
+                try {
+                    insert(indexTable);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }//GEN-LAST:event_button2ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

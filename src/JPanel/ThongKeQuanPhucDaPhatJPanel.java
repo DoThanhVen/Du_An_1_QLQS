@@ -44,7 +44,7 @@ public class ThongKeQuanPhucDaPhatJPanel extends javax.swing.JPanel {
         DefaultTableModel model = (DefaultTableModel) tblQuanPhuc.getModel();
         model.setRowCount(0);
         try {
-            String sql = "EXEC sp_ThongKeQuanPhucDaPhat";
+            String sql = "EXEC sp_ThongKeQuanPhucDaPhatDaiDoi";
             ResultSet rs = JDBCHelper.executeQuery(sql);
             while (rs.next()) {
                 Object[] row =

@@ -43,7 +43,7 @@
           </AuxValues>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-              <AbsoluteConstraints x="10" y="152" width="820" height="330"/>
+              <AbsoluteConstraints x="10" y="152" width="810" height="330"/>
             </Constraint>
           </Constraints>
 
@@ -52,11 +52,13 @@
             <Component class="JavaClass.TableQuanPhuc" name="tblQuanPhuc">
               <Properties>
                 <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                  <Table columnCount="4" rowCount="0">
+                  <Table columnCount="6" rowCount="0">
                     <Column editable="false" title="M&#xe3; &#x110;&#x1ea1;i &#x110;&#x1ed9;i" type="java.lang.Object"/>
                     <Column editable="false" title="M&#xe3; Qu&#xe2;n Phuc" type="java.lang.Object"/>
                     <Column editable="false" title="T&#xea;n Qu&#xe2;n Ph&#x1ee5;c" type="java.lang.Object"/>
-                    <Column editable="false" title="S&#x1ed1; L&#x1b0;&#x1ee3;ng" type="java.lang.Object"/>
+                    <Column editable="false" title="S&#x1ed1; L&#x1b0;&#x1ee3;ng Nh&#x1ead;p" type="java.lang.Object"/>
+                    <Column editable="false" title="&#x110;&#xe3; Ph&#xe1;t" type="java.lang.Object"/>
+                    <Column editable="false" title="C&#xf2;n L&#x1ea1;i" type="java.lang.Object"/>
                   </Table>
                 </Property>
               </Properties>
@@ -110,6 +112,9 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="button2"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="button2ActionPerformed"/>
+          </Events>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
               <AbsoluteConstraints x="220" y="100" width="80" height="-1"/>

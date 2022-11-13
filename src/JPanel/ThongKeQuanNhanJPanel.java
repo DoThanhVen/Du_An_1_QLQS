@@ -15,24 +15,21 @@ import javax.swing.table.DefaultTableModel;
  */
 public class ThongKeQuanNhanJPanel extends javax.swing.JPanel {
 
+    private int indexCBO = -1;
+
     /**
      * Creates new form ThongKeQuanNhan
      */
     public ThongKeQuanNhanJPanel() {
         initComponents();
-        try {
-            fillTable();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
-    void fillTable() throws SQLException {
+    void fillTable(int year) throws SQLException {
         DefaultTableModel model = (DefaultTableModel) tblQuanNhan.getModel();
         model.setRowCount(0);
         ResultSet rs = null;
         try {
-            String sql = "EXEC sp_ThongKeQuanNhan;";
+            String sql = "EXEC sp_ThongKeQuanNhan '" + year + "'";
             rs = JDBCHelper.executeQuery(sql);
             while (rs.next()) {
                 Object[] row = {
@@ -43,6 +40,17 @@ public class ThongKeQuanNhanJPanel extends javax.swing.JPanel {
             }
         } finally {
             rs.getStatement().getConnection().close();
+        }
+    }
+
+    void fillComboboxNam() {
+        try {
+            String sql = "SELECT YEAR(NhapNgu) Nam FROM QuanNhan GROUP BY YEAR(NhapNgu)";
+            ResultSet rs = JDBCHelper.executeQuery(sql);
+            while (rs.next()) {
+                cboNam.addItem(rs.getString(1));
+            }
+        } catch (Exception e) {
         }
     }
 
@@ -59,6 +67,8 @@ public class ThongKeQuanNhanJPanel extends javax.swing.JPanel {
         tblQuanNhan = new JavaClass.TableQuanNhan();
         jLabel1 = new javax.swing.JLabel();
         cboNam = new JavaClass.Combobox();
+
+        setBackground(new java.awt.Color(255, 255, 255));
 
         tblQuanNhan.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -80,8 +90,13 @@ public class ThongKeQuanNhanJPanel extends javax.swing.JPanel {
 
         jLabel1.setText("THỐNG KÊ QUÂN NHÂN");
 
-        cboNam.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "2020", "2021", "2022" }));
+        cboNam.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "2020", "2021", "2022", "2023" }));
         cboNam.setLabeText("");
+        cboNam.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cboNamItemStateChanged(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -103,13 +118,27 @@ public class ThongKeQuanNhanJPanel extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addGap(15, 15, 15)
                 .addComponent(jLabel1)
-                .addGap(18, 18, Short.MAX_VALUE)
-                .addComponent(cboNam, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(cboNam, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 402, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void cboNamItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cboNamItemStateChanged
+        // TODO add your handling code here:
+        if (indexCBO == -1) {
+            indexCBO = cboNam.getSelectedIndex();
+        } else {
+            indexCBO = cboNam.getSelectedIndex();
+            try {
+                fillTable(Integer.parseInt(cboNam.getItemAt(indexCBO).toString()));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }//GEN-LAST:event_cboNamItemStateChanged
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
