@@ -10,18 +10,22 @@ import Helper.DateHelper;
 import Helper.DialogHelper;
 import Helper.JDBCHelper;
 import JavaClass.Button;
+import Search.SearchOptinEvent;
+import Search.SearchOption;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
 import java.sql.Date;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import javax.swing.ImageIcon;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -29,7 +33,7 @@ import javax.swing.table.DefaultTableModel;
  * @author Admin
  */
 public class PhatQuanPhucJPanel extends javax.swing.JPanel {
-
+    
     PhatQuanPhucDAO phatqpDAO = new PhatQuanPhucDAO();
     List<PhatQuanPhuc> List = new ArrayList<>();
 
@@ -43,7 +47,7 @@ public class PhatQuanPhucJPanel extends javax.swing.JPanel {
         addQuanNhan();
         fillTable();
     }
-
+    
     void Edit() {
         scrollTable.setVerticalScrollBar(new JavaClass.ScrollBar());
         scrollTable.getVerticalScrollBar().setBackground(Color.WHITE);
@@ -69,8 +73,20 @@ public class PhatQuanPhucJPanel extends javax.swing.JPanel {
         btnSapXep.setStyle(Button.ButtonStyle.DESTRUCTIVE);
         btnSapXep.setFont(new Font("sansserif", 1, 12));
         btnSapXep.setText("Sắp Xếp");
+//Thanh tìm kiếm
+        txtSearch.addOption(new SearchOption("mã quân nhân...", new ImageIcon(getClass().getResource("/Image/Icon/shield-plus-solid-24.png"))));
+        txtSearch.addOption(new SearchOption("tên quân nhân...", new ImageIcon(getClass().getResource("/Image/Icon/user-detail-solid-24.png"))));
+        txtSearch.addOption(new SearchOption("mã quân phục...", new ImageIcon(getClass().getResource("/Image/Icon/shield-plus-solid-24.png"))));
+        txtSearch.addOption(new SearchOption("tên quân phục...", new ImageIcon(getClass().getResource("/Image/Icon/iconmonstr-clothing-12-24.png"))));
+        txtSearch.addEventOptionSelected(new SearchOptinEvent() {
+            @Override
+            public void optionSelected(SearchOption option, int index) {
+                txtSearch.setHint("Tìm kiếm " + option.getName());
+            }
+        });
+        txtSearch.setSelectedIndex(0);
     }
-
+    
     void showForm(Component com
     ) {
         panelBorder1.removeAll();
@@ -79,7 +95,7 @@ public class PhatQuanPhucJPanel extends javax.swing.JPanel {
         panelBorder1.repaint();
         panelBorder1.revalidate();
     }
-
+    
     void fillCombobox() {
         try {
             String sql = "Select * FROM QuanPhuc";
@@ -100,7 +116,7 @@ public class PhatQuanPhucJPanel extends javax.swing.JPanel {
         } catch (Exception e) {
         }
     }
-
+    
     void addQuanNhan() {
         try {
             String sql = "Select * FROM QuanNhan";
@@ -142,6 +158,7 @@ public class PhatQuanPhucJPanel extends javax.swing.JPanel {
         btnKhac = new JavaClass.Button();
         lblQuanNhan = new javax.swing.JLabel();
         btnSapXep = new JavaClass.Button();
+        txtSearch = new Search.TextFieldSearchOption();
 
         panelBorder1.setBackground(new java.awt.Color(255, 255, 255));
         panelBorder1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -151,9 +168,17 @@ public class PhatQuanPhucJPanel extends javax.swing.JPanel {
 
             },
             new String [] {
-                "ID", "Mã QN", "Họ & Tên", "Mã QP", "Tên Quân Phục", "Ngày Nhận", "Ngày Phát Tiếp"
+                "ID", "Mã QN", "Họ & Tên", "Mã QP", "Tên Quân Phục", "Ngày Nhận", "Ngày Phát Tiếp", "Đơn Vị"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         scrollTable.setViewportView(tblPhatQuanPhuc);
 
         panelBorder1.add(scrollTable, new org.netbeans.lib.awtextra.AbsoluteConstraints(12, 276, 826, 211));
@@ -233,6 +258,14 @@ public class PhatQuanPhucJPanel extends javax.swing.JPanel {
         });
         panelBorder1.add(btnSapXep, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 240, 80, -1));
 
+        txtSearch.setColorOverlay1(new java.awt.Color(130, 148, 96));
+        txtSearch.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtSearchKeyReleased(evt);
+            }
+        });
+        panelBorder1.add(txtSearch, new org.netbeans.lib.awtextra.AbsoluteConstraints(660, 0, 190, -1));
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -246,13 +279,14 @@ public class PhatQuanPhucJPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
     public void XepTheoMa() {
         try {
-            String sql = "Select NhanQuanPhuc.MaBienNhan,QuanNhan.MaDinhDanh,QuanNhan.HoTen,"
-                    + "NhanQuanPhuc.NgayNhan,NhanQuanPhuc.NgayCapTiep,QuanPhuc.MaQuanPhuc,QuanPhuc.TenQuanPhuc\n"
-                    + "FROM NhanQuanPhuc INNER JOIN QuanNhan On NhanQuanPhuc.MaDinhDanh = QuanNhan.MaDinhDanh\n"
-                    + "INNER JOIN QuanPhuc ON NhanQuanPhuc.MaQuanPhuc = QuanPhuc.MaQuanPhuc";
+            String sql = "Select NhanQuanPhuc.MaBienNhan,QuanNhan.MaDinhDanh,QuanNhan.HoTen,NhanQuanPhuc.NgayNhan,NhanQuanPhuc.NgayCapTiep,\n"
+                    + "QuanPhuc.MaQuanPhuc,QuanPhuc.TenQuanPhuc,DaiDoi.TenDaiDoi \n"
+                    + "FROM NhanQuanPhuc INNER JOIN QuanNhan On NhanQuanPhuc.MaDinhDanh = QuanNhan.MaDinhDanh \n"
+                    + "INNER JOIN QuanPhuc ON NhanQuanPhuc.MaQuanPhuc = QuanPhuc.MaQuanPhuc \n"
+                    + "INNER JOIN DaiDoi ON DaiDoi.MaDaiDoi = QuanNhan.DonVi";
             ResultSet rs = JDBCHelper.executeQuery(sql);
             while (rs.next()) {
-                List.add(new PhatQuanPhuc(rs.getString(2), rs.getString(6), rs.getString(3), rs.getString(7), rs.getInt(1), rs.getDate(4), rs.getDate(5)));
+                List.add(new PhatQuanPhuc(rs.getString(2), rs.getString(6), rs.getString(3), rs.getString(7), rs.getString(8), rs.getInt(1), rs.getDate(4), rs.getDate(5)));
             }
             Comparator<PhatQuanPhuc> comp = new Comparator<PhatQuanPhuc>() {
                 public int compare(PhatQuanPhuc gb1, PhatQuanPhuc gb2) {
@@ -263,37 +297,78 @@ public class PhatQuanPhucJPanel extends javax.swing.JPanel {
             DefaultTableModel model = (DefaultTableModel) tblPhatQuanPhuc.getModel();
             model.setRowCount(0);
             for (PhatQuanPhuc qp : List) {
-                Object[] row = new Object[]{qp.getMaBienNhan(), qp.getMaQuanNhan(), qp.getHoTen(), qp.getMaQuanPhuc(), qp.getTenQuanPhuc(), qp.getNgayNhan(), qp.getNgayCapTiep()};
+                Object[] row = new Object[]{qp.getMaBienNhan(), qp.getMaQuanNhan(), qp.getHoTen(), qp.getMaQuanPhuc(), qp.getTenQuanPhuc(), qp.getNgayNhan(), qp.getNgayCapTiep(), qp.getTenDaiDoi()};
                 model.addRow(row);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
+    
     void fillTable() {
         DefaultTableModel model = (DefaultTableModel) tblPhatQuanPhuc.getModel();
         model.setRowCount(0);
         try {
-            String sql = "Select NhanQuanPhuc.MaBienNhan,QuanNhan.MaDinhDanh,QuanNhan.HoTen,"
-                    + "NhanQuanPhuc.NgayNhan,NhanQuanPhuc.NgayCapTiep,QuanPhuc.MaQuanPhuc,QuanPhuc.TenQuanPhuc\n"
-                    + "FROM NhanQuanPhuc INNER JOIN QuanNhan On NhanQuanPhuc.MaDinhDanh = QuanNhan.MaDinhDanh\n"
-                    + "INNER JOIN QuanPhuc ON NhanQuanPhuc.MaQuanPhuc = QuanPhuc.MaQuanPhuc";
+            String sql = "Select NhanQuanPhuc.MaBienNhan,QuanNhan.MaDinhDanh,QuanNhan.HoTen,NhanQuanPhuc.NgayNhan,NhanQuanPhuc.NgayCapTiep,\n"
+                    + "QuanPhuc.MaQuanPhuc,QuanPhuc.TenQuanPhuc,DaiDoi.TenDaiDoi \n"
+                    + "FROM NhanQuanPhuc INNER JOIN QuanNhan On NhanQuanPhuc.MaDinhDanh = QuanNhan.MaDinhDanh \n"
+                    + "INNER JOIN QuanPhuc ON NhanQuanPhuc.MaQuanPhuc = QuanPhuc.MaQuanPhuc \n"
+                    + "INNER JOIN DaiDoi ON DaiDoi.MaDaiDoi = QuanNhan.DonVi";
             ResultSet rs = JDBCHelper.executeQuery(sql);
             while (rs.next()) {
-                Object[] row = new Object[]{rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(6), rs.getString(7), rs.getDate(4), rs.getDate(5)};
+                Object[] row = new Object[]{rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(6), rs.getString(7), rs.getDate(4), rs.getDate(5), rs.getString(8)};
                 model.addRow(row);
             }
         } catch (Exception e) {
+            e.printStackTrace();
         }
     }
     private void button1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_button1ActionPerformed
         // TODO add your handling code here:
         showForm(new SizeQuanPhucJPanel());
     }//GEN-LAST:event_button1ActionPerformed
-
-    private void btnThemQuanPhucActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThemQuanPhucActionPerformed
-        // TODO add your handling code here:
+    void checkInsertQuanPhuc() {
+        String maQuanPhuc = "", maDonVi = "";
+        try {
+            String sql = "Select * FROM QuanPhuc";
+            ResultSet rs = JDBCHelper.executeQuery(sql);
+            while (rs.next()) {
+                if (cboQuanPhuc.getSelectedItem().toString().equalsIgnoreCase(rs.getString("TenQuanPhuc"))) {
+                    maQuanPhuc = rs.getString("MaQuanPhuc");
+                    break;
+                }
+            }
+            try {
+                String sqlMaDV = "SELECT QuanNhan.DonVi FROM SizeQuanPhuc INNER JOIN QuanNhan\n"
+                        + "ON SizeQuanPhuc.MaDinhDanh = QuanNhan.MaDinhDanh\n"
+                        + "WHERE SizeQuanPhuc.MaDinhDanh = '" + SizeQuanPhucJPanel.maQuanNhan + "'";
+                ResultSet rsMaDV = JDBCHelper.executeQuery(sqlMaDV);
+                while (rsMaDV.next()) {
+                    maDonVi = rsMaDV.getString(1);
+                    break;
+                }
+                try {
+                    String sqlCheck = "EXEC sp_ThongKeQuanPhucDaiDoi '" + maQuanPhuc + "','" + maDonVi + "'";
+                    ResultSet rst = JDBCHelper.executeQuery(sqlCheck);
+                    while (rst.next()) {
+                        if (rst.getInt("Tong") <= rst.getInt("DaPhat")) {
+                            DialogHelper.alert(this, "Quân phục đã phát hết");
+                        } else {
+                            insertQuanPhuc();
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    void insertQuanPhuc() {
         int year = -1;
         try {
             PhatQuanPhuc model = new PhatQuanPhuc();
@@ -335,10 +410,53 @@ public class PhatQuanPhucJPanel extends javax.swing.JPanel {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }//GEN-LAST:event_btnThemQuanPhucActionPerformed
-
-    private void btnThemGiayDepActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThemGiayDepActionPerformed
+    }
+    private void btnThemQuanPhucActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThemQuanPhucActionPerformed
         // TODO add your handling code here:
+        checkInsertQuanPhuc();
+    }//GEN-LAST:event_btnThemQuanPhucActionPerformed
+    void checkInsertGiay() {
+        String maQuanPhuc = "", maDonVi = "";
+        try {
+            String sql = "Select * FROM QuanPhuc";
+            ResultSet rs = JDBCHelper.executeQuery(sql);
+            while (rs.next()) {
+                if (cboGiay.getSelectedItem().toString().equalsIgnoreCase(rs.getString("TenQuanPhuc"))) {
+                    maQuanPhuc = rs.getString("MaQuanPhuc");
+                    break;
+                }
+            }
+            try {
+                String sqlMaDV = "SELECT QuanNhan.DonVi FROM SizeQuanPhuc INNER JOIN QuanNhan\n"
+                        + "ON SizeQuanPhuc.MaDinhDanh = QuanNhan.MaDinhDanh\n"
+                        + "WHERE SizeQuanPhuc.MaDinhDanh = '" + SizeQuanPhucJPanel.maQuanNhan + "'";
+                ResultSet rsMaDV = JDBCHelper.executeQuery(sqlMaDV);
+                while (rsMaDV.next()) {
+                    maDonVi = rsMaDV.getString(1);
+                    break;
+                }
+                try {
+                    String sqlCheck = "EXEC sp_ThongKeQuanPhucDaiDoi '" + maQuanPhuc + "','" + maDonVi + "'";
+                    ResultSet rst = JDBCHelper.executeQuery(sqlCheck);
+                    while (rst.next()) {
+                        if (rst.getInt("Tong") <= rst.getInt("DaPhat")) {
+                            DialogHelper.alert(this, "Quân phục đã phát hết");
+                        } else {
+                            insertGiay();
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    void insertGiay() {
         int year = -1;
         try {
             PhatQuanPhuc model = new PhatQuanPhuc();
@@ -380,10 +498,53 @@ public class PhatQuanPhucJPanel extends javax.swing.JPanel {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }//GEN-LAST:event_btnThemGiayDepActionPerformed
-
-    private void btnMuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMuActionPerformed
+    }
+    private void btnThemGiayDepActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThemGiayDepActionPerformed
         // TODO add your handling code here:
+        checkInsertGiay();
+    }//GEN-LAST:event_btnThemGiayDepActionPerformed
+    void checkInsertMu() {
+        String maQuanPhuc = "", maDonVi = "";
+        try {
+            String sql = "Select * FROM QuanPhuc";
+            ResultSet rs = JDBCHelper.executeQuery(sql);
+            while (rs.next()) {
+                if (cboMu.getSelectedItem().toString().equalsIgnoreCase(rs.getString("TenQuanPhuc"))) {
+                    maQuanPhuc = rs.getString("MaQuanPhuc");
+                    break;
+                }
+            }
+            try {
+                String sqlMaDV = "SELECT QuanNhan.DonVi FROM SizeQuanPhuc INNER JOIN QuanNhan\n"
+                        + "ON SizeQuanPhuc.MaDinhDanh = QuanNhan.MaDinhDanh\n"
+                        + "WHERE SizeQuanPhuc.MaDinhDanh = '" + SizeQuanPhucJPanel.maQuanNhan + "'";
+                ResultSet rsMaDV = JDBCHelper.executeQuery(sqlMaDV);
+                while (rsMaDV.next()) {
+                    maDonVi = rsMaDV.getString(1);
+                    break;
+                }
+                try {
+                    String sqlCheck = "EXEC sp_ThongKeQuanPhucDaiDoi '" + maQuanPhuc + "','" + maDonVi + "'";
+                    ResultSet rst = JDBCHelper.executeQuery(sqlCheck);
+                    while (rst.next()) {
+                        if (rst.getInt("Tong") <= rst.getInt("DaPhat")) {
+                            DialogHelper.alert(this, "Quân phục đã phát hết");
+                        } else {
+                            insertMu();
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    void insertMu() {
         int year = -1;
         try {
             PhatQuanPhuc model = new PhatQuanPhuc();
@@ -425,10 +586,53 @@ public class PhatQuanPhucJPanel extends javax.swing.JPanel {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }//GEN-LAST:event_btnMuActionPerformed
-
-    private void btnKhacActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnKhacActionPerformed
+    }
+    private void btnMuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMuActionPerformed
         // TODO add your handling code here:
+        checkInsertMu();
+    }//GEN-LAST:event_btnMuActionPerformed
+    void checkInsertKhac() {
+        String maQuanPhuc = "", maDonVi = "";
+        try {
+            String sql = "Select * FROM QuanPhuc";
+            ResultSet rs = JDBCHelper.executeQuery(sql);
+            while (rs.next()) {
+                if (cboKhac.getSelectedItem().toString().equalsIgnoreCase(rs.getString("TenQuanPhuc"))) {
+                    maQuanPhuc = rs.getString("MaQuanPhuc");
+                    break;
+                }
+            }
+            try {
+                String sqlMaDV = "SELECT QuanNhan.DonVi FROM SizeQuanPhuc INNER JOIN QuanNhan\n"
+                        + "ON SizeQuanPhuc.MaDinhDanh = QuanNhan.MaDinhDanh\n"
+                        + "WHERE SizeQuanPhuc.MaDinhDanh = '" + SizeQuanPhucJPanel.maQuanNhan + "'";
+                ResultSet rsMaDV = JDBCHelper.executeQuery(sqlMaDV);
+                while (rsMaDV.next()) {
+                    maDonVi = rsMaDV.getString(1);
+                    break;
+                }
+                try {
+                    String sqlCheck = "EXEC sp_ThongKeQuanPhucDaiDoi '" + maQuanPhuc + "','" + maDonVi + "'";
+                    ResultSet rst = JDBCHelper.executeQuery(sqlCheck);
+                    while (rst.next()) {
+                        if (rst.getInt("Tong") <= rst.getInt("DaPhat")) {
+                            DialogHelper.alert(this, "Quân phục đã phát hết");
+                        } else {
+                            insertKhac();
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    void insertKhac() {
         int year = -1;
         try {
             PhatQuanPhuc model = new PhatQuanPhuc();
@@ -470,6 +674,10 @@ public class PhatQuanPhucJPanel extends javax.swing.JPanel {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+    private void btnKhacActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnKhacActionPerformed
+        // TODO add your handling code here:
+        checkInsertKhac();
     }//GEN-LAST:event_btnKhacActionPerformed
 
     private void btnSapXepActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSapXepActionPerformed
@@ -477,6 +685,43 @@ public class PhatQuanPhucJPanel extends javax.swing.JPanel {
         List.removeAll(List);
         XepTheoMa();
     }//GEN-LAST:event_btnSapXepActionPerformed
+    void loadData(String where) {
+        DefaultTableModel model = (DefaultTableModel) tblPhatQuanPhuc.getModel();
+        model.setRowCount(0);
+        try {
+            String sql = "Select NhanQuanPhuc.MaBienNhan,QuanNhan.MaDinhDanh,QuanNhan.HoTen,NhanQuanPhuc.NgayNhan,NhanQuanPhuc.NgayCapTiep,\n"
+                    + "QuanPhuc.MaQuanPhuc,QuanPhuc.TenQuanPhuc,DaiDoi.TenDaiDoi \n"
+                    + "FROM NhanQuanPhuc INNER JOIN QuanNhan On NhanQuanPhuc.MaDinhDanh = QuanNhan.MaDinhDanh\n"
+                    + "INNER JOIN DaiDoi ON DaiDoi.MaDaiDoi = QuanNhan.DonVi\n"
+                    + "INNER JOIN QuanPhuc ON QuanPhuc.MaQuanPhuc = NhanQuanPhuc.MaQuanPhuc " + where;
+            ResultSet rs = JDBCHelper.executeQuery(sql);
+            while (rs.next()) {
+                Object[] row = new Object[]{rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(6), rs.getString(7), rs.getDate(4), rs.getDate(5), rs.getString(8)};
+                model.addRow(row);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    private void txtSearchKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSearchKeyReleased
+        // TODO add your handling code here:
+        if (txtSearch.isSelected()) {
+            int option = txtSearch.getSelectedIndex();
+            String text = "%" + txtSearch.getText() + "%";
+            if (txtSearch.getText().equals("")) {
+                fillTable();
+            }
+            if (option == 0) {
+                loadData("Where QuanNhan.MaDinhDanh LIKE N'" + text + "'");
+            } else if (option == 1) {
+                loadData("Where QuanNhan.HoTen LIKE N'" + text + "'");
+            } else if (option == 2) {
+                loadData("Where QuanPhuc.MaQuanPhuc LIKE " + "N'" + text + "'");
+            } else {
+                loadData("Where QuanPhuc.TenQuanPhuc LIKE " + "N'" + text + "'");
+            }
+        }
+    }//GEN-LAST:event_txtSearchKeyReleased
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -498,5 +743,6 @@ public class PhatQuanPhucJPanel extends javax.swing.JPanel {
     private JPanel.PanelBorder panelBorder1;
     private javax.swing.JScrollPane scrollTable;
     private JavaClass.TableQuanPhuc tblPhatQuanPhuc;
+    private Search.TextFieldSearchOption txtSearch;
     // End of variables declaration//GEN-END:variables
 }

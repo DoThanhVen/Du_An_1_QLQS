@@ -17,7 +17,7 @@ import javax.swing.table.DefaultTableModel;
  * @author Admin
  */
 public class ThongKeQuanPhucConLaiJPanel extends javax.swing.JPanel {
-    
+
     List<QuanPhuc> ListQP = new ArrayList<>();
 
     /**
@@ -25,9 +25,10 @@ public class ThongKeQuanPhucConLaiJPanel extends javax.swing.JPanel {
      */
     public ThongKeQuanPhucConLaiJPanel() {
         initComponents();
+        fillTableQuanPhucDaPhat();
         init();
     }
-    
+
     void init() {
         scrollTable.setVerticalScrollBar(new JavaClass.ScrollBar());
         scrollTable.getVerticalScrollBar().setBackground(Color.WHITE);
@@ -38,7 +39,7 @@ public class ThongKeQuanPhucConLaiJPanel extends javax.swing.JPanel {
         fillTableQuanPhucDaPhat();
         tblQuanPhuc.setLocation(10, 100);
     }
-    
+
     void fillTableQuanPhucDaPhat() {
         DefaultTableModel model = (DefaultTableModel) tblQuanPhuc.getModel();
         model.setRowCount(0);
@@ -46,7 +47,7 @@ public class ThongKeQuanPhucConLaiJPanel extends javax.swing.JPanel {
             String sql = "Select * FROM QuanPhuc";
             ResultSet rs = JDBCHelper.executeQuery(sql);
             while (rs.next()) {
-                String sqlLoadData = "EXEC sp_ThongKeQuanPhuc '" + rs.getString("MaQuanPhuc") + "'";
+                String sqlLoadData = "EXEC sp_ThongKeQuanPhucConLai '" + rs.getString("MaQuanPhuc") + "'";
                 ResultSet rst = JDBCHelper.executeQuery(sqlLoadData);
                 while (rst.next()) {
                     Object[] row = {rs.getString("MaQuanPhuc"), rs.getString("TenQuanPhuc"), rst.getInt(1)};
@@ -54,6 +55,7 @@ public class ThongKeQuanPhucConLaiJPanel extends javax.swing.JPanel {
                 }
             }
         } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

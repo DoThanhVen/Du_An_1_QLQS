@@ -12,21 +12,30 @@ import java.sql.Date;
  */
 public class PhatQuanPhuc {
 
-    private String maQuanNhan, maQuanPhuc, hoTen, tenQuanPhuc;
+    private String maQuanNhan, maQuanPhuc, hoTen, tenQuanPhuc, tenDaiDoi;
     private int maBienNhan;
     private Date ngayNhan, ngayCapTiep;
 
     public PhatQuanPhuc() {
     }
 
-    public PhatQuanPhuc(String maQuanNhan, String maQuanPhuc, String hoTen, String tenQuanPhuc, int maBienNhan, Date ngayNhan, Date ngayCapTiep) {
+    public PhatQuanPhuc(String maQuanNhan, String maQuanPhuc, String hoTen, String tenQuanPhuc, String tenDaiDoi, int maBienNhan, Date ngayNhan, Date ngayCapTiep) {
         this.maQuanNhan = maQuanNhan;
         this.maQuanPhuc = maQuanPhuc;
         this.hoTen = hoTen;
         this.tenQuanPhuc = tenQuanPhuc;
+        this.tenDaiDoi = tenDaiDoi;
         this.maBienNhan = maBienNhan;
         this.ngayNhan = ngayNhan;
         this.ngayCapTiep = ngayCapTiep;
+    }
+
+    public String getTenDaiDoi() {
+        return tenDaiDoi;
+    }
+
+    public void setTenDaiDoi(String tenDaiDoi) {
+        this.tenDaiDoi = tenDaiDoi;
     }
 
     public String getHoTen() {

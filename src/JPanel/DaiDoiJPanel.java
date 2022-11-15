@@ -90,29 +90,12 @@ public class DaiDoiJPanel extends javax.swing.JPanel {
         }
     }
 
-    void addItem(String maDaiDoi) {
-        QuanPhucDaiDoi model = new QuanPhucDaiDoi();
-        try {
-            String sql = "Select * FROM QuanPhuc";
-            ResultSet rs = JDBCHelper.executeQuery(sql);
-            while (rs.next()) {
-                model.setMaDaiDoi(maDaiDoi);
-                model.setMaQuanPhuc(rs.getString("MaQuanPhuc"));
-                model.setSoLuong(0);
-                qpddDAO.insert(model);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     void insert() {
         DaiDoi model = new DaiDoi();
         model.setMaDaiDoi(txtMaDaiDoi.getText());
         model.setTenDaiDoi(txtTenDaiDoi.getText());
         try {
             ddDAO.insert(model);
-            addItem(txtMaDaiDoi.getText());
             fillTable();
             Load();
             DialogHelper.alert(this, "Thêm đại đội thành công!");

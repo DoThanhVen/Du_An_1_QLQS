@@ -79,12 +79,13 @@
             <Component class="JavaClass.TableQuanPhuc" name="tblSizeQuanPhuc">
               <Properties>
                 <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                  <Table columnCount="5" rowCount="0">
+                  <Table columnCount="6" rowCount="0">
                     <Column editable="false" title="M&#xe3; Qu&#xe2;n Nh&#xe2;n" type="java.lang.Object"/>
                     <Column editable="false" title="T&#xea;n Qu&#xe2;n Nh&#xe2;n" type="java.lang.Object"/>
                     <Column editable="false" title="Size Qu&#xe2;n Ph&#x1ee5;c" type="java.lang.Object"/>
                     <Column editable="false" title="Size Gi&#xe0;y" type="java.lang.Object"/>
                     <Column editable="false" title="Size M&#x169;" type="java.lang.Object"/>
+                    <Column editable="false" title="&#x110;&#x1a1;n V&#x1ecb;" type="java.lang.Object"/>
                   </Table>
                 </Property>
               </Properties>

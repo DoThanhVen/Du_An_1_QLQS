@@ -11,15 +11,49 @@ package Class;
 public class QuanPhucDaiDoi {
 
     private String maDaiDoi, maQuanPhuc;
-    private int soLuong;
+    private int soLuongNhap, soLuongPhat, soLuongCon, ID;
 
     public QuanPhucDaiDoi() {
     }
 
-    public QuanPhucDaiDoi(String maDaiDoi, String maQuanPhuc, int soLuong) {
+    public QuanPhucDaiDoi(String maDaiDoi, String maQuanPhuc, int soLuongNhap, int soLuongPhat, int soLuongCon) {
         this.maDaiDoi = maDaiDoi;
         this.maQuanPhuc = maQuanPhuc;
-        this.soLuong = soLuong;
+        this.soLuongNhap = soLuongNhap;
+        this.soLuongPhat = soLuongPhat;
+        this.soLuongCon = soLuongCon;
+    }
+
+    public int getID() {
+        return ID;
+    }
+
+    public void setID(int ID) {
+        this.ID = ID;
+    }
+
+    public int getSoLuongNhap() {
+        return soLuongNhap;
+    }
+
+    public void setSoLuongNhap(int soLuongNhap) {
+        this.soLuongNhap = soLuongNhap;
+    }
+
+    public int getSoLuongPhat() {
+        return soLuongPhat;
+    }
+
+    public void setSoLuongPhat(int soLuongPhat) {
+        this.soLuongPhat = soLuongPhat;
+    }
+
+    public int getSoLuongCon() {
+        return soLuongCon;
+    }
+
+    public void setSoLuongCon(int soLuongCon) {
+        this.soLuongCon = soLuongCon;
     }
 
     public String getMaDaiDoi() {
@@ -36,14 +70,6 @@ public class QuanPhucDaiDoi {
 
     public void setMaQuanPhuc(String maQuanPhuc) {
         this.maQuanPhuc = maQuanPhuc;
-    }
-
-    public int getSoLuong() {
-        return soLuong;
-    }
-
-    public void setSoLuong(int soLuong) {
-        this.soLuong = soLuong;
     }
 
 }

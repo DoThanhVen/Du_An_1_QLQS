@@ -162,15 +162,19 @@ public class SizeQuanPhucJPanel extends javax.swing.JPanel {
         DefaultTableModel model = (DefaultTableModel) tblSizeQuanPhuc.getModel();
         model.setRowCount(0);
         try {
-            String sql = "select SizeQuanPhuc.MaDinhDanh,QuanNhan.HoTen,SizeQuanPhuc.SizeQuanPhuc,SizeQuanPhuc.SizeGiay,SizeQuanPhuc.SizeMu\n"
-                    + "from SizeQuanPhuc inner join QuanNhan on SizeQuanPhuc.MaDinhDanh = QuanNhan.MaDinhDanh";
+            String sql = "select SizeQuanPhuc.MaDinhDanh,QuanNhan.HoTen,SizeQuanPhuc.SizeQuanPhuc,SizeQuanPhuc.SizeGiay,"
+                    + "SizeQuanPhuc.SizeMu, DaiDoi.TenDaiDoi \n"
+                    + "from SizeQuanPhuc inner join QuanNhan on SizeQuanPhuc.MaDinhDanh = QuanNhan.MaDinhDanh"
+                    + " INNER JOIN DaiDoi\n"
+                    + "ON QuanNhan.DonVi = DaiDoi.MaDaiDoi";
             ResultSet rs = JDBCHelper.executeQuery(sql);
             while (rs.next()) {
                 Object[] row = new Object[]{rs.getString(1),
                     rs.getString(2),
                     rs.getString(3),
                     rs.getInt(4),
-                    rs.getInt(5)};
+                    rs.getInt(5),
+                    rs.getString(6)};
                 model.addRow(row);
             }
         } catch (SQLException e) {
@@ -226,11 +230,11 @@ public class SizeQuanPhucJPanel extends javax.swing.JPanel {
 
             },
             new String [] {
-                "Mã Quân Nhân", "Tên Quân Nhân", "Size Quân Phục", "Size Giày", "Size Mũ"
+                "Mã Quân Nhân", "Tên Quân Nhân", "Size Quân Phục", "Size Giày", "Size Mũ", "Đơn Vị"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false
+                false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {

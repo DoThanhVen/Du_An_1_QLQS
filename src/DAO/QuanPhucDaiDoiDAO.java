@@ -22,16 +22,17 @@ public class QuanPhucDaiDoiDAO {
         JDBCHelper.executeUpdate(sql,
                 model.getMaDaiDoi(),
                 model.getMaQuanPhuc(),
-                model.getSoLuong()
+                model.getSoLuongNhap()
         );
     }
 
     public void update(QuanPhucDaiDoi model) {
-        String sql = "UPDATE QuanPhucDaiDoi SET MaQuanPhuc  = ?,SoLuong = ? WHERE MaDaiDoi = ?";
+        String sql = "UPDATE QuanPhucDaiDoi SET MaQuanPhuc  = ?,SoLuong = ?, MaDaiDoi = ? WHERE ID = ?";
         JDBCHelper.executeUpdate(sql,
                 model.getMaQuanPhuc(),
-                model.getSoLuong(),
-                model.getMaDaiDoi());
+                model.getSoLuongNhap(),
+                model.getMaDaiDoi(),
+                model.getID());
     }
 
     public List<QuanPhucDaiDoi> select() {
